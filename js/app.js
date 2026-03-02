@@ -21,6 +21,7 @@ function formatCategoryBlock(category, items) {
 }
 
 function formatEventItem(item) {
+  const mediaHtml = (item.media && item.media.url) ? `<div class="news-item-media">${item.media.type === 'link' ? `<a href="${item.media.url}" target="_blank" rel="noopener">${item.media.label || item.media.url}</a>` : `<img src="${item.media.url}" alt="" loading="lazy">`}</div>` : '';
   if (item.date || item.time || item.address) {
     const meta = [];
     if (item.date && item.time) meta.push(`${item.date} • ${item.time}`);
@@ -31,12 +32,12 @@ function formatEventItem(item) {
     <div class="news-item news-item-event">
       <span class="news-item-title">${item.title}</span>
       <div class="news-item-meta">${meta.join('<br>')}</div>
-      <span class="news-item-content">${item.content}</span>
+      <span class="news-item-content">${item.content}</span>${mediaHtml}
     </div>`;
   }
   return `
     <div class="news-item">
-      <span class="news-item-title">${item.title}</span> <span class="news-item-content">${item.content}</span>
+      <span class="news-item-title">${item.title}</span> <span class="news-item-content">${item.content}</span>${mediaHtml}
     </div>`;
 }
 
@@ -66,14 +67,42 @@ function loadData() {
   showWelcome();
 }
 
+function appendMedia(container, media) {
+  if (!media || !media.url) return;
+  const wrapper = document.createElement('div');
+  wrapper.className = 'news-item-media';
+  if (media.type === 'link') {
+    const a = document.createElement('a');
+    a.href = media.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = media.label || media.url;
+    wrapper.appendChild(a);
+  } else {
+    const img = document.createElement('img');
+    img.src = media.url;
+    img.alt = '';
+    img.loading = 'lazy';
+    wrapper.appendChild(img);
+  }
+  container.appendChild(wrapper);
+}
+
 function showWelcome() {
   const info = document.querySelector('.screen-info');
   const welcomeText = 'Feel like a 2000s kid again. Clique à droite.';
-  info.innerHTML = '<div class="screen-info-block"><p><span class="typewriter-target"></span></p></div>';
+  const welcomeMedia = typeof WELCOME_MEDIA !== 'undefined' ? WELCOME_MEDIA : '';
+  info.innerHTML = '<div class="screen-info-block"><p><span class="typewriter-target"></span></p><div class="welcome-media"></div></div>';
   const target = info.querySelector('.typewriter-target');
+  const mediaContainer = info.querySelector('.welcome-media');
   isTyping = true;
   setButtonsEnabled(false);
   typeText(target, welcomeText, () => {
+    if (welcomeMedia) {
+      appendMedia(mediaContainer, { type: 'gif', url: welcomeMedia });
+    }
+    const infoEl = document.querySelector('.screen-info');
+    if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
     isTyping = false;
     setButtonsEnabled(true);
   });
@@ -151,6 +180,7 @@ function renderHistoryAndType() {
         typeText(metaEl, metaText, () => {
           typeText(contentEl, item.content || '', () => {
             metaEl.innerHTML = metaText.replace(/ • /g, '<br>');
+            if (item.media && item.media.url) appendMedia(itemDiv, item.media);
             itemIndex++;
             setTimeout(typeNextItem, 50);
           });
@@ -163,6 +193,7 @@ function renderHistoryAndType() {
       const contentEl = itemDiv.querySelector('.news-item-content');
       typeText(titleEl, item.title, () => {
         typeText(contentEl, ' ' + (item.content || ''), () => {
+          if (item.media && item.media.url) appendMedia(itemDiv, item.media);
           itemIndex++;
           setTimeout(typeNextItem, 50);
         });

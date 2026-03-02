@@ -189,6 +189,25 @@ body {
   margin-bottom: 0;
 }
 
+.news-item-media,
+.welcome-media {
+  margin-top: 0.75rem;
+}
+
+.news-item-media img,
+.welcome-media img {
+  max-width: min(280px, 85%);
+  height: auto;
+  display: block;
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+}
+
+.news-item-media a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 .news-item-content {
   display: inline;
   margin: 0;
