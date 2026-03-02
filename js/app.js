@@ -90,7 +90,7 @@ function appendMedia(container, media) {
 
 function showWelcome() {
   const info = document.querySelector('.screen-info');
-  const welcomeText = 'Feel like a 2000s kid again. Clique à droite.';
+  const welcomeText = 'Feel like a 2000s kid again. Clique pour explorer.';
   const welcomeMedia = typeof WELCOME_MEDIA !== 'undefined' ? WELCOME_MEDIA : '';
   info.innerHTML = '<div class="screen-info-block"><p><span class="typewriter-target"></span></p><div class="welcome-media"></div></div>';
   const target = info.querySelector('.typewriter-target');

@@ -10,10 +10,10 @@ const NEWS_DATA = {
     { id: "qui-on-est", label: "Qui on est", symbol: "◆" }
   ],
   items: [
-    { categoryId: "prog", title: "Salut salut les jeux vidéo", date: "Samedi 7 décembre", time: "20h", address: "Microbrasserie La Barbote — 1 Rue des deux Ponts, Montpellier", content: "Arène déjantée spéciale jeu vidéo. Viens jouer, relever des défis, kiffer le moment. Gratuit, chapeau possible. Inscription conseillée.", media: { type: 'gif', url: 'assets/img/salut-jeux.gif' } },
+    { categoryId: "prog", title: "Salut salut les jeux vidéo", date: "Samedi 7 décembre", time: "20h", address: "Microbrasserie La Barbote — 1 Rue des deux Ponts, Montpellier", content: "Arène déjantée spéciale jeu vidéo. Viens jouer, relever des défis, kiffer le moment. Gratuit, chapeau possible. Inscription conseillée.", media: { type: 'image', url: 'assets/img/salut-jeux.jpg' } },
     { categoryId: "prog", title: "Soirée années 2000", date: "Samedi 8 mars", time: "19h30 - Minuit", address: "Le Réservoir — 55 rue de Montels Saint-Pierre, Montpellier", content: "Diiingoo diiiingue ! Viens danser sur les hits des années 2000. Du fun, de la musique, des happenings. Feel like a 2000s kid again !" },
     { categoryId: "prog", title: "Mario Kart World + Soirée 2000s", date: "Prochainement", time: "—", address: "La Barbote — 1 Rue des deux Ponts, Montpellier", content: "Mario Kart sur Switch 2 puis hits années 2000. T'es chaud ? Viens juste kiffer ! Gratuit." },
-    { categoryId: "flashback", title: "Panorama 2000s Summer Hits", content: "Soirée années 2000 sur le toit du Corum. Booms 2008, dauphins garantis." },
+    { categoryId: "flashback", title: "Panorama 2000s Summer Hits", content: "Soirée années 2000 sur le toit du Corum. Booms 2008, dauphins garantis.", media: { type: 'image', url: 'assets/img/panorama-summer-hits.jpg' } },
     { categoryId: "flashback", title: "Blindtest années 2000", content: "Joue entre potes ou solo. Cadeaux de Noël ou orange à gagner. After party millennial vibe en bonus." },
     { categoryId: "flashback", title: "Hips don't lie au Café Tropisme", content: "Soirée années 2000. RDV @+ au café Tropisme." },
     { categoryId: "qui-on-est", title: "Notre ADN", content: "Enfants des années 90/2000. Couleurs RVB, sonorités électroniques, saveurs édulcorées. On promeut la culture libre et défend un regard sur les jeux vidéo, le cinéma, la musique et la tech." },
