@@ -9,23 +9,69 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
   font-family: 'IBM Plex Mono', 'Courier New', monospace;
   background: var(--bg);
   color: var(--accent);
 }
 
-/* --- Cadre rétro (70% viewport) --- */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* --- Header avec logo --- */
+.site-header {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.site-logo-img {
+  display: block;
+  margin: 0 auto;
+  max-width: min(400px, 90vw);
+  height: auto;
+}
+
+.site-logo {
+  margin: 0 auto;
+  display: inline-block;
+  text-align: left;
+  font-family: 'Bowlby One SC', sans-serif;
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+/* S de salut et I de INTERNET alignés à gauche */
+.logo-salut,
+.logo-internet {
+  display: block;
+}
+
+.logo-salut {
+  text-transform: lowercase;
+  font-size: 0.7em;
+  letter-spacing: -0.02em;
+}
+
+.logo-internet {
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  margin-top: -0.15em;
+}
+
+/* --- Cadre rétro — taille fixe (70% viewport) --- */
 .screen-frame {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 70vw;
   height: 70vh;
+  margin: 1rem 0;
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: 85vh;
   border: 4px solid var(--accent);
   border-radius: 8px;
   box-shadow: inset 0 0 0 2px var(--bg);
@@ -34,11 +80,30 @@ html, body {
   overflow: hidden;
 }
 
-/* Barre titre fausse fenêtre */
+/* Barre titre — bandeau défilant (credo) en boucle infinie */
 .screen-titlebar {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0;
   border-bottom: 2px solid var(--accent);
   font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+  overflow: hidden;
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 25s linear infinite;
+}
+
+.ticker-text {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding-right: 3rem;
+}
+
+/* Boucle infinie : 2 copies identiques, on scrolle -50% pour revenir au même visuel */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Contenu partagé en 2 zones */
@@ -46,11 +111,13 @@ html, body {
   flex: 1;
   display: flex;
   min-height: 0;
+  overflow: hidden;
 }
 
-/* Zone infos — scroll interne */
+/* Zone infos — scroll interne si contenu dépasse */
 .screen-info {
   flex: 1;
+  min-height: 0;
   padding: 1rem;
   overflow-y: auto;
   overflow-x: hidden;

@@ -7,11 +7,15 @@ Application web d’actualités locales avec interface rétro 2-bit.
 ```
 SALUTLSAUTINTERNET/
 ├── index.html      # Page principale
+├── assets/         # SVG, images (logo, icônes)
+│   ├── svg/
+│   └── img/
+├── content/        # Données de référence, guidelines
 ├── css/
-│   └── style.css   # Styles 2 couleurs (inversées)
-├── js/
-│   ├── data.js     # Données des catégories et actualités
-│   └── app.js      # Logique applicative + effet machine à écrire
+│   └── style.css
+└── js/
+    ├── data.js     # Données des catégories et actualités
+    └── app.js      # Logique applicative
 ```
 
 ## Lancer le projet

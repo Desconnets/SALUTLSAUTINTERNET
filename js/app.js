@@ -35,7 +35,7 @@ function loadData() {
 
 function showWelcome() {
   const info = document.querySelector('.screen-info');
-  info.innerHTML = '<div class="screen-info-block"><p>Bienvenue. Cliquez sur un thème à gauche pour afficher les actualités.</p></div>';
+  info.innerHTML = '<div class="screen-info-block"><p>Feel like a 2000s kid again. Clique à droite.</p></div>';
 }
 
 function addToHistory(block) {
