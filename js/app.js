@@ -15,16 +15,49 @@ function getItemsForCategory(categoryId) {
 }
 
 function formatCategoryBlock(category, items) {
-  const label = `${category.label} ${category.symbol}`;
-  return { label, items };
+  const subtitle = category.subtitle ? ` — ${category.subtitle}` : '';
+  const label = `${category.label} ${category.symbol}${subtitle}`;
+  return { label, items, category };
+}
+
+function formatEventItem(item) {
+  if (item.date || item.time || item.address) {
+    const meta = [];
+    if (item.date && item.time) meta.push(`${item.date} • ${item.time}`);
+    else if (item.date) meta.push(item.date);
+    else if (item.time && item.time !== '—') meta.push(item.time);
+    if (item.address) meta.push(item.address);
+    return `
+    <div class="news-item news-item-event">
+      <span class="news-item-title">${item.title}</span>
+      <div class="news-item-meta">${meta.join('<br>')}</div>
+      <span class="news-item-content">${item.content}</span>
+    </div>`;
+  }
+  return `
+    <div class="news-item">
+      <span class="news-item-title">${item.title}</span> <span class="news-item-content">${item.content}</span>
+    </div>`;
 }
 
 function blockToHtml(block) {
-  return block.items.map(item => `
-    <div class="news-item">
-      <span class="news-item-title">${item.title}</span> <span class="news-item-content">${item.content}</span>
-    </div>
-  `).join('');
+  return block.items.map(item => formatEventItem(item)).join('');
+}
+
+function typeText(element, text, onComplete) {
+  let i = 0;
+  function step() {
+    if (i < text.length) {
+      element.textContent += text[i];
+      i++;
+      const info = document.querySelector('.screen-info');
+      if (info) info.scrollTop = info.scrollHeight;
+      setTimeout(step, TYPE_SPEED);
+    } else if (onComplete) {
+      setTimeout(onComplete, 50);
+    }
+  }
+  step();
 }
 
 function loadData() {
@@ -35,7 +68,15 @@ function loadData() {
 
 function showWelcome() {
   const info = document.querySelector('.screen-info');
-  info.innerHTML = '<div class="screen-info-block"><p>Feel like a 2000s kid again. Clique à droite.</p></div>';
+  const welcomeText = 'Feel like a 2000s kid again. Clique à droite.';
+  info.innerHTML = '<div class="screen-info-block"><p><span class="typewriter-target"></span></p></div>';
+  const target = info.querySelector('.typewriter-target');
+  isTyping = true;
+  setButtonsEnabled(false);
+  typeText(target, welcomeText, () => {
+    isTyping = false;
+    setButtonsEnabled(true);
+  });
 }
 
 function addToHistory(block) {
@@ -90,28 +131,43 @@ function renderHistoryAndType() {
     }
 
     const item = lastBlock.items[itemIndex];
+    const hasEventMeta = item.date || item.time || item.address;
     const itemDiv = document.createElement('div');
-    itemDiv.className = 'news-item';
-    itemDiv.innerHTML = `<span class="news-item-title">${item.title}</span> <span class="news-item-content typewriter-target"></span>`;
-    container.appendChild(itemDiv);
+    itemDiv.className = hasEventMeta ? 'news-item news-item-event' : 'news-item';
 
-    const target = itemDiv.querySelector('.typewriter-target');
-    const fullText = item.content;
-    let i = 0;
-
-    function typeNext() {
-      if (i < fullText.length) {
-        target.textContent += fullText[i];
-        i++;
-        info.scrollTop = info.scrollHeight;
-        setTimeout(typeNext, TYPE_SPEED);
-      } else {
-        itemIndex++;
-        setTimeout(typeNextItem, 50);
-      }
+    if (hasEventMeta) {
+      const meta = [];
+      if (item.date && item.time) meta.push(`${item.date} • ${item.time}`);
+      else if (item.date) meta.push(item.date);
+      else if (item.time && item.time !== '—') meta.push(item.time);
+      if (item.address) meta.push(item.address);
+      const metaText = meta.join(' • ');
+      itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span><div class="news-item-meta typewriter-target"></div><span class="news-item-content typewriter-target"></span>';
+      container.appendChild(itemDiv);
+      const titleEl = itemDiv.querySelector('.news-item-title');
+      const metaEl = itemDiv.querySelector('.news-item-meta');
+      const contentEl = itemDiv.querySelectorAll('.news-item-content')[0];
+      typeText(titleEl, item.title, () => {
+        typeText(metaEl, metaText, () => {
+          typeText(contentEl, item.content || '', () => {
+            metaEl.innerHTML = metaText.replace(/ • /g, '<br>');
+            itemIndex++;
+            setTimeout(typeNextItem, 50);
+          });
+        });
+      });
+    } else {
+      itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span> <span class="news-item-content typewriter-target"></span>';
+      container.appendChild(itemDiv);
+      const titleEl = itemDiv.querySelector('.news-item-title');
+      const contentEl = itemDiv.querySelector('.news-item-content');
+      typeText(titleEl, item.title, () => {
+        typeText(contentEl, ' ' + (item.content || ''), () => {
+          itemIndex++;
+          setTimeout(typeNextItem, 50);
+        });
+      });
     }
-
-    typeNext();
   }
 
   typeNextItem();

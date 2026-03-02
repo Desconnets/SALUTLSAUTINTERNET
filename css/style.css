@@ -1,7 +1,7 @@
 /* --- 2-bit / 2 couleurs (inversées) --- */
 :root {
   --bg: #e8e8e8;
-  --accent: #1a1a1a;
+  --accent: #6b00dd;
 }
 
 * { box-sizing: border-box; }
@@ -171,6 +171,20 @@ body {
 .news-item {
   margin-bottom: 1rem;
 }
+
+.news-item-event .news-item-meta {
+  display: block;
+  margin: 0.35em 0 0.5em 0;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--accent);
+}
+
+.news-item-event .news-item-content {
+  display: block;
+  margin-top: 0.25em;
+}
+
 .news-item:last-child {
   margin-bottom: 0;
 }
@@ -211,4 +225,32 @@ body {
 .screen-controls button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+/* Responsive — mobile : boutons en bas, horizontaux */
+@media (max-width: 768px) {
+  .screen-body {
+    flex-direction: column;
+  }
+
+  .screen-info {
+    border-right: none;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .screen-controls {
+    width: 100%;
+    min-width: unset;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .screen-controls button {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+  }
 }
