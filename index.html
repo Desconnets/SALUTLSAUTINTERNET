@@ -6,15 +6,21 @@
   <title>Salut Salut Internet</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Logo texte simple (CSS 3D uniquement). Pour tester à nouveau un logo WebGL,
+       on pourra réajouter une classe et des scripts plus tard. -->
   <header class="site-header">
-    <h1 class="site-logo">
+    <!-- Logo texte initial (fallback accessible / version sans 3D) -->
+    <h1 class="site-logo" data-text="salut salut INTERNET">
       <span class="logo-salut">salut salut</span>
       <span class="logo-internet">INTERNET</span>
     </h1>
+    <!-- Conteneur anciennement utilisé pour le logo 3D WebGL, conservé au cas où.
+         Sans script associé, il est neutre. -->
+    <!-- <div id="logo-3d-root"></div> -->
     <!-- Logo SVG (conservé au cas où) : décommenter pour afficher à la place du logo typo
     <img class="site-logo-img" src="assets/svg/ssi-classic-b%26w.svg" alt="Salut Salut Internet">
     -->

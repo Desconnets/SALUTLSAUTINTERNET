@@ -83,6 +83,7 @@ function appendMedia(container, media) {
     img.src = media.url;
     img.alt = '';
     img.loading = 'lazy';
+    wrapper.classList.add('media-reveal');
     wrapper.appendChild(img);
   }
   container.appendChild(wrapper);

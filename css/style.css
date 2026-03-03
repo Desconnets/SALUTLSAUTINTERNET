@@ -10,7 +10,7 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-family: 'Inter', 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
   color: var(--accent);
 }
@@ -27,6 +27,9 @@ body {
   width: 100%;
   padding: 1rem 1.5rem;
   text-align: center;
+  position: relative;
+  /* Perspective légère pour l'inclinaison du logo (style "retour vers le futur") */
+  perspective: 900px;
 }
 
 .site-logo-img {
@@ -45,6 +48,18 @@ body {
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1.2;
+  position: relative;
+  z-index: 2;
+  /* Effet 3D d'origine : légère inclinaison + empilement d'ombres violettes,
+     avec un petit effet "plaque" penchée vers la droite */
+  transform-origin: left center;
+  transform: skewX(-6deg) rotateY(-10deg);
+  text-shadow:
+    0px 0px 0 #6b00dd,
+    1px 1px 0 #5d00c0,
+    2px 2px 0 #4a009d,
+    3px 3px 0 #360079,
+    4px 4px 0 #000000;
 }
 
 /* S de salut et I de INTERNET alignés à gauche */
@@ -65,6 +80,11 @@ body {
   margin-top: -0.15em;
 }
 
+/* Ancien conteneur WebGL laissé neutre au cas où */
+#logo-3d-root {
+  display: none;
+}
+
 /* --- Cadre rétro — taille fixe (70% viewport) --- */
 .screen-frame {
   width: 70vw;
@@ -78,6 +98,26 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+
+/* Légère ondulation / texture d'écran (subtile) */
+.screen-frame::before {
+  content: "";
+  position: absolute;
+  inset: -4%;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.06) 0,
+      rgba(0, 0, 0, 0.06) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+  animation: screen-wobble 7s ease-in-out infinite alternate;
 }
 
 /* Barre titre — bandeau défilant (credo) en boucle infinie */
@@ -104,6 +144,19 @@ body {
 @keyframes ticker-scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* Ondulation très légère de l'écran */
+@keyframes screen-wobble {
+  0% {
+    transform: translate3d(0, 0, 0) skewY(0.25deg) scaleX(1.01);
+  }
+  50% {
+    transform: translate3d(0, -1px, 0) skewY(-0.25deg) scaleX(1.015);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) skewY(0.15deg) scaleX(1.005);
+  }
 }
 
 /* Contenu partagé en 2 zones */
@@ -194,6 +247,7 @@ body {
   margin-top: 0.75rem;
 }
 
+/* Images et GIFs dans les blocs */
 .news-item-media img,
 .welcome-media img {
   max-width: min(280px, 85%);
@@ -201,6 +255,26 @@ body {
   display: block;
   border: 2px solid var(--accent);
   border-radius: 4px;
+}
+
+/* Effet “déroulement” horizontal de gauche à droite pour les médias */
+.media-reveal {
+  overflow: hidden;
+}
+
+.media-reveal img {
+  /* effet “scan” ligne par ligne façon écran Alien, de gauche à droite */
+  clip-path: inset(0 100% 0 0);
+  animation: media-scan 1.3s steps(24, end) forwards;
+}
+
+@keyframes media-scan {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 .news-item-media a {
@@ -229,16 +303,19 @@ body {
   color: var(--accent);
   border: 2px solid var(--accent);
   padding: 0.75rem 1rem;
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-family: 'IBM Plex Sans', 'IBM Plex Mono', 'Courier New', monospace;
   font-size: clamp(0.7rem, 1.2vw, 0.9rem);
   cursor: pointer;
   text-align: left;
+  transform-origin: center;
+  transition: transform 150ms ease-out;
 }
 
 .screen-controls button:hover,
 .screen-controls button.active {
   background: var(--accent);
   color: var(--bg);
+  animation: screen-wobble 0.9s ease-in-out infinite;
 }
 
 .screen-controls button:disabled {
