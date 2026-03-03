@@ -92,9 +92,12 @@ body {
   margin: 1rem 0;
   max-width: 90vw;
   max-height: 85vh;
-  border: 4px solid var(--accent);
+  /* Cadre un peu plus fin + ombre très douce et proche pour le relief */
+  border: 3px solid var(--accent);
   border-radius: 8px;
-  box-shadow: inset 0 0 0 2px var(--bg);
+  box-shadow:
+    inset 0 0 0 1px var(--bg),
+    2px 2px 0 rgba(107, 0, 221, 0.18);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -122,10 +125,61 @@ body {
 
 /* Barre titre — bandeau défilant (credo) en boucle infinie */
 .screen-titlebar {
-  padding: 0.5rem 0;
-  border-bottom: 2px solid var(--accent);
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid var(--accent);
   font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  /* Bloc plein sous les trois cercles, pour masquer le texte défilant */
+  background: var(--bg);
+  padding: 0.15rem 0.6rem 0.15rem 0.45rem;
+  border-radius: 999px;
+}
+
+.window-btn {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  position: relative;
+}
+
+.window-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0.1rem;
+  border-radius: 50%;
+}
+
+.window-btn--close::before {
+  border: 1px solid var(--accent);
+}
+
+.window-btn--min::before {
+  border-bottom: 1px solid var(--accent);
+}
+
+.window-btn--max::before {
+  border: 1px solid var(--accent);
+  border-top: none;
+  border-left: none;
+}
+
+.ticker-viewport {
+  flex: 1;
+  overflow: hidden;
+  /* Trait vertical à la jonction avec les boutons (là où commence le texte) */
+  border-left: 1px solid var(--accent);
 }
 
 .ticker-track {
