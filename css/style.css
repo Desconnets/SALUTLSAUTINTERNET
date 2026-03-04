@@ -59,12 +59,40 @@ body {
 /* --- Thèmes clair / sombre via classes sur la racine (:root / <html>) --- */
 /* Thème clair : réutilise le fond clair d’origine pour l’ensemble de l’UI */
 :root.theme-light {
-  /* Fond de page clair avec une teinte ROSE FLASHY,
-     mais en version beaucoup plus subtile / pastel. */
-  --page-bg: #ffb7df; /* dérivé adouci de #ff309c */
-  --frame-bg: var(--bg);
-  --titlebar-bg: var(--bg);
-  --panel-bg: var(--bg);
+  /* Fond de page plus clair, teinte rose pastel + dégradé métallique (voir body ci‑dessous) */
+  --page-bg: #ffcce8; /* un peu plus clair que #ffb7df, dérivé de #ff309c */
+  --frame-bg: #ffffff;
+  --titlebar-bg: #ffffff;
+  --panel-bg: #ffffff;
+}
+
+/* Thème clair : dégradé “métal vaporwave” sur le fond de page (body) */
+html.theme-light body {
+  background:
+    /* Reflets métalliques diagonaux */
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(255, 255, 255, 0.0) 22%,
+      rgba(255, 255, 255, 0.9) 38%,
+      rgba(255, 255, 255, 0.0) 60%,
+      rgba(255, 255, 255, 0.7) 78%,
+      rgba(255, 255, 255, 0.0) 100%
+    ),
+    /* Dégradé vaporwave de base */
+    linear-gradient(
+      160deg,
+      #ffe6ff 0%,
+      #ffc6ff 18%,
+      #ff8ad4 36%,
+      #ff309c 52%,
+      #b5ffff 74%,
+      #8fd3ff 88%,
+      #f5fbff 100%
+    );
+  background-attachment: fixed;
+  background-color: #ffcce8;
+  background-blend-mode: screen;
 }
 
 /* Thème sombre explicite (identique à l’état actuel) */
@@ -77,6 +105,20 @@ body {
   --scanline-color: rgba(107, 0, 221, 0.45);
   /* En sombre, le texte sur fond accent (surlignage) repasse en foncé pour garder le contraste */
   --on-accent: #000000;
+}
+
+/* Thème sombre : fond vaporwave/digital très sombre, sans être plus noir que #1a1c24 */
+html.theme-dark body {
+  background: linear-gradient(
+    150deg,
+    #1a1c24 0%,
+    #212335 30%,
+    #261d3c 55%,
+    #203447 80%,
+    #1a1c24 100%
+  );
+  background-attachment: fixed;
+  background-color: #1a1c24;
 }
 
 /* --- Header avec logo --- */
