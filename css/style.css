@@ -46,7 +46,7 @@ body {
   font-family: 'Bowlby One SC', sans-serif;
   font-size: clamp(1.8rem, 6vw, 3rem);
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.2;
   position: relative;
   z-index: 2;
@@ -71,12 +71,12 @@ body {
 .logo-salut {
   text-transform: lowercase;
   font-size: 0.7em;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .logo-internet {
   text-transform: uppercase;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   margin-top: -0.15em;
 }
 
@@ -379,6 +379,25 @@ body {
 
 /* Responsive — mobile : boutons en bas, horizontaux */
 @media (max-width: 768px) {
+  .site-header {
+    padding: 1.4rem 0.8rem 0.6rem;
+  }
+
+  .site-logo {
+    font-size: clamp(2.4rem, 9vw, 4rem);
+    line-height: 1.05;
+  }
+
+  .screen-frame {
+    width: calc(100vw - 1.5rem);
+    max-width: calc(100vw - 1.5rem);
+    height: auto;
+    max-height: none;
+    margin: 0.75rem auto 0;
+    min-height: 75vh;
+    border-radius: 0;
+  }
+
   .screen-body {
     flex-direction: column;
   }
@@ -402,5 +421,30 @@ body {
     flex: 1;
     min-width: 80px;
     text-align: center;
+  }
+}
+
+/* Très petits mobiles : logo encore plus lisible */
+@media (max-width: 480px) {
+  .site-logo {
+    font-size: clamp(2.8rem, 11vw, 4.4rem);
+    line-height: 1.05;
+  }
+
+  .logo-salut {
+    letter-spacing: 0.04em;
+  }
+
+  .logo-internet {
+    letter-spacing: 0.03em;
+  }
+}
+
+/* Grands écrans : fenêtre plus compacte (effet écran cathodique centré) */
+@media (min-width: 1200px) {
+  .screen-frame {
+    width: 55vw;
+    max-width: 960px;
+    height: 70vh;
   }
 }
