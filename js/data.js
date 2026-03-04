@@ -1,7 +1,15 @@
 // Salut Salut Internet — Prog / Flashback / Qui on est
 
-// GIF/image affiché après le message d'accueil (vide = aucun)
+// GIF/image affiché après le message d'accueil (vide = aucun).
+// NOTE: pour l'instant, l'écran d'accueil utilise un GIF aléatoire parmi DEFAULT_MEDIA_URLS ;
+//       si on veut un visuel d'accueil fixe, il faudra brancher WELCOME_MEDIA dans showWelcome().
 const WELCOME_MEDIA = 'assets/img/welcome.gif';
+
+// Stickers tombants (PNG détourés) : un même type tombe en boucle tant qu’on ne clique pas.
+// Ajouter ici les chemins vers tes PNG (ex. assets/img/stickers/emoji.png).
+const FALLING_STICKER_URLS = [
+  'assets/img/stickers/sticker.png',
+];
 
 const NEWS_DATA = {
   categories: [

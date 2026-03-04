@@ -20,6 +20,9 @@ const MEDIA_ANIM_DELAY_MS = 1400;
 // n'a pas encore d'image / gif associé.
 // Pour ajouter ou retirer des GIF par défaut, il suffit de modifier
 // cette liste de chemins, sans toucher au reste du code.
+// NOTE: si un jour on veut optimiser un peu plus, on pourrait aussi
+//       factoriser certains querySelector('.screen-info') récurrents,
+//       mais ce n'est pas critique vu la taille de l'app.
 const DEFAULT_MEDIA_URLS = [
   'assets/img/default-01.gif',
   'assets/img/default-02.gif',
@@ -340,7 +343,94 @@ function initThemeToggle() {
   syncLabel();
 }
 
+// --- Stickers tombants (fun) : gravité, rebond en bas, clic = repart en haut et disparaît ---
+// Si l’internaute ne clique pas, un nouveau du même type tombe à intervalles → la page se remplit.
+const STICKER_SIZE_PX = 200;
+const STICKER_GRAVITY = 0.35;
+const STICKER_BOUNCE = 0.6;
+const STICKER_REST_THRESHOLD = 0.5;
+const STICKER_FLY_UP_SPEED = -14;
+const STICKER_FIRST_DELAY_MS = 2500;
+const STICKER_SPAWN_INTERVAL_MS = 15000;
+const STICKER_MAX_ON_SCREEN = 4;
+
+let fallingStickerCount = 0;
+
+function spawnFallingSticker(url) {
+  if (fallingStickerCount >= STICKER_MAX_ON_SCREEN) return;
+  fallingStickerCount += 1;
+  const img = document.createElement('img');
+  img.className = 'falling-sticker';
+  img.src = url;
+  img.alt = '';
+  img.draggable = false;
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const floor = h - STICKER_SIZE_PX;
+  let x = Math.max(0, Math.random() * (w - STICKER_SIZE_PX));
+  let y = -STICKER_SIZE_PX;
+  let vy = 0;
+  let rotation = 0;
+  let resting = false;
+  let flyAway = false;
+  let rafId = null;
+
+  img.style.left = `${x}px`;
+  img.style.top = `${y}px`;
+
+  function tick() {
+    if (flyAway) {
+      // Phase "fly away" : accélération vers le HAUT + rotation.
+      vy -= STICKER_GRAVITY * 0.6;
+      y += vy;
+      rotation += 9;
+      img.style.top = `${y}px`;
+      img.style.transform = `rotate(${rotation}deg)`;
+      if (y < -STICKER_SIZE_PX * 2) {
+        fallingStickerCount -= 1;
+        img.remove();
+        return;
+      }
+    } else if (!resting) {
+      vy += STICKER_GRAVITY;
+      y += vy;
+      if (y >= floor) {
+        y = floor;
+        vy = -vy * STICKER_BOUNCE;
+        if (Math.abs(vy) < STICKER_REST_THRESHOLD) {
+          resting = true;
+          vy = 0;
+        }
+      }
+      img.style.top = `${y}px`;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  img.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!resting || flyAway) return;
+    flyAway = true;
+    vy = STICKER_FLY_UP_SPEED;
+    img.style.pointerEvents = 'none';
+  });
+
+  document.body.appendChild(img);
+  rafId = requestAnimationFrame(tick);
+}
+
+function startStickerRain() {
+  const urls = typeof FALLING_STICKER_URLS !== 'undefined' ? FALLING_STICKER_URLS : [];
+  if (!urls.length) return;
+  const url = urls[0];
+
+  setTimeout(() => spawnFallingSticker(url), STICKER_FIRST_DELAY_MS);
+  setInterval(() => spawnFallingSticker(url), STICKER_SPAWN_INTERVAL_MS);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   initThemeToggle();
+  startStickerRain();
 });

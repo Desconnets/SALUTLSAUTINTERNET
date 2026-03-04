@@ -5,7 +5,7 @@
   /* Noir d’écran / bordure de moniteur – un peu plus profond (test #1a1c24) */
   --bg-monitor: #1a1c24;
   --accent: #6b00dd;     /* violet principal */
-  --rose-flashy: #309c;  /* ROSE FLASHY de la charte */
+  --rose-flashy: #309c;  /* ROSE FLASHY de la charte (variante plus douce ; TODO: harmoniser avec #ff309c si besoin) */
   /* Couleur des scanlines CRT (utilisée sur l’overlay animé)
      Valeur par défaut = plus discrète (mode clair) */
   --scanline-color: rgba(107, 0, 221, 0.18);
@@ -531,7 +531,8 @@ html::before {
     1px 1px 0 rgba(0, 0, 0, 0.8);
 }
 
-/* Hooks pour personnaliser chaque type de bloc si besoin */
+/* Hooks pour personnaliser chaque type de bloc si besoin.
+   NOTE: actuellement vides ; si on ne les utilise pas, on pourra les supprimer pour alléger le CSS. */
 .screen-info-block--prog {}
 .screen-info-block--flashback {}
 .screen-info-block--qui-on-est {}
@@ -813,4 +814,18 @@ html::before {
     max-width: 960px;
     height: 70vh;
   }
+}
+
+/* --- Stickers tombants (fun) : sous la couche glitch/scanlines, rebond au sol, clic = repart en haut --- */
+.falling-sticker {
+  position: fixed;
+  z-index: 1;
+  pointer-events: auto;
+  cursor: pointer;
+  max-width: 220px;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  /* Pas d’ombre/contour pour garder le rendu “détouré” */
 }
