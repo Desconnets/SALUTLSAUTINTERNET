@@ -491,12 +491,42 @@ html::before {
 }
 
 .news-item-title {
-  /* Titre d'événement en bannière façon "skyblog" */
+  /* Titre d'événement en bandeau façon "skyblog" */
   display: block;
-  background: var(--accent);
+  /* Bandeau légèrement plus clair que le mauve principal,
+     avec un petit effet de relief type barre de fenêtre. */
+  background: rgba(107, 0, 221, 0.85);
   color: var(--on-accent);
-  padding: 0.3em 0.75em;
+  padding: 0.3em 0.85em;
   font-weight: 700;
+  border-top: 1px solid var(--rose-flashy);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+/* Variante du bandeau de titre en mode sombre :
+   on garde la vibe, mais avec plus de contraste pour la lecture. */
+:root.theme-dark .news-item-title {
+  /* Dégradé mauve-only, du plus clair au plus sombre de gauche à droite */
+  background: linear-gradient(
+    90deg,
+    #b28cff 0%,   /* mauve très clair à gauche */
+    #6b00dd 50%,  /* ULTRA VIOLET au centre */
+    #23004f 100%  /* mauve plus sombre à droite */
+  );
+  /* Texte avec la même teinte que le fond d'écran sombre (bg-monitor) */
+  color: #1a1c24;
+  border-top-color: #309c;
+  border-bottom-color: rgba(0, 0, 0, 0.85);
+  /* Léger halo rose-flashy derrière le texte + ombre sombre pour la lisibilité */
+  text-shadow:
+    0 0 4px rgba(48, 156, 204, 0.0), /* placeholder, laissé neutre */
+    0 0 6px rgba(48, 156, 204, 0.0),
+    0 0 5px rgba(48, 156, 204, 0.35),
+    0 0 8px rgba(48, 156, 204, 0.25),
+    0 0 2px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.9);
 }
 
 .news-item {
