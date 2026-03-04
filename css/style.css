@@ -1,7 +1,24 @@
-/* --- 2-bit / 2 couleurs (inversées) --- */
+/* --- 2-bit / 2 couleurs (inversées) + variables d'UI --- */
 :root {
-  --bg: #e8e8e8;
-  --accent: #6b00dd;
+  /* Couleurs brutes de la charte */
+  --bg: #e8e8e8;         /* clair intérieur d'écran */
+  /* Noir d’écran / bordure de moniteur – un peu plus profond (test #1a1c24) */
+  --bg-monitor: #1a1c24;
+  --accent: #6b00dd;     /* violet principal */
+  --rose-flashy: #309c;  /* ROSE FLASHY de la charte */
+  /* Couleur des scanlines CRT (utilisée sur l’overlay animé)
+     Valeur par défaut = plus discrète (mode clair) */
+  --scanline-color: rgba(107, 0, 221, 0.18);
+
+  /* Couleur du texte quand le fond est l’accent (boutons hover, titres surlignés) */
+  --on-accent: #000000;
+
+  /* Couleurs sémantiques d'UI (pour changer les fonds sans tout toucher).
+     Valeurs par défaut = thème sombre actuel. Les thèmes viendront les surcharger. */
+  --page-bg: var(--bg-monitor);    /* fond de la page */
+  --frame-bg: var(--bg-monitor);   /* fond intérieur de la frame (full noir, test) */
+  --titlebar-bg: var(--bg-monitor);/* barre du haut type fenêtre */
+  --panel-bg: var(--bg-monitor);   /* panneaux de contenu (info + boutons) */
 }
 
 * { box-sizing: border-box; }
@@ -11,7 +28,8 @@ html, body {
   padding: 0;
   min-height: 100%;
   font-family: 'Inter', 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
+  /* Fond global : utiliser --page-bg pour changer partout en une fois */
+  background: var(--page-bg);
   color: var(--accent);
 }
 
@@ -20,6 +38,25 @@ body {
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
+}
+
+/* --- Thèmes clair / sombre via classes sur la racine (:root / <html>) --- */
+/* Thème clair : réutilise le fond clair d’origine pour l’ensemble de l’UI */
+:root.theme-light {
+  --page-bg: var(--bg);
+  --frame-bg: var(--bg);
+  --titlebar-bg: var(--bg);
+  --panel-bg: var(--bg);
+}
+
+/* Thème sombre explicite (identique à l’état actuel) */
+:root.theme-dark {
+  --page-bg: var(--bg-monitor);
+  --frame-bg: var(--bg-monitor);
+  --titlebar-bg: var(--bg-monitor);
+  --panel-bg: var(--bg-monitor);
+  /* En sombre on renforce les scanlines pour qu’elles soient bien visibles */
+  --scanline-color: rgba(107, 0, 221, 0.45);
 }
 
 /* --- Header avec logo --- */
@@ -37,6 +74,33 @@ body {
   margin: 0 auto;
   max-width: min(400px, 90vw);
   height: auto;
+}
+
+/* Petit bouton de bascule de thème dans le header */
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: rgba(107, 0, 221, 0.85);
+  font-family: 'IBM Plex Sans', 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  /* Petit cadre façon icône système au survol */
+  border: 1px solid rgba(107, 0, 221, 0.6);
+  background: rgba(107, 0, 221, 0.08);
 }
 
 .site-logo {
@@ -59,6 +123,7 @@ body {
     1px 1px 0 #5d00c0,
     2px 2px 0 #4a009d,
     3px 3px 0 #360079,
+    /* Dernière ombre : noir plein comme à l’origine */
     4px 4px 0 #000000;
 }
 
@@ -95,6 +160,8 @@ body {
   /* Cadre un peu plus fin + ombre très douce et proche pour le relief */
   border: 3px solid var(--accent);
   border-radius: 8px;
+  /* Intérieur de l’écran : fond clair inchangé */
+  background: var(--frame-bg);
   box-shadow:
     inset 0 0 0 1px var(--bg),
     2px 2px 0 rgba(107, 0, 221, 0.18);
@@ -102,25 +169,53 @@ body {
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  /* Effet 1 (wobble) désactivé.
+     Pour le réactiver, remettre l'animation frame-wobble ci-dessous. */
+  /* animation: frame-wobble 7s ease-in-out infinite alternate; */
 }
 
-/* Légère ondulation / texture d'écran (subtile) */
+/* Légère ondulation / texture d'écran (subtile) – effets CRT désactivés
+   pour l’instant, bloc laissé ici comme mémo. */
 .screen-frame::before {
+  /* Effet 3 (flash RGB) – désactivé pour l’instant.
+     À combiner plus tard avec un autre effet (scanlines ou jitter)
+     en remettant le bloc d’overlay + animation frame-rgb-flash. */
+  /* content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: normal;
+  background:
+    linear-gradient(90deg,
+      rgba(255, 0, 128, 0.7),
+      rgba(0, 255, 255, 0.7)
+    );
+  opacity: 0;
+  animation: frame-rgb-flash 12s ease-in-out infinite; */
+
+  /* Effet 4 : scanlines animées très fines (CRT "on top").
+     Actuellement SEUL effet actif pour l'écran. */
   content: "";
   position: absolute;
-  inset: -4%;
+  /* Overlay placé à l'intérieur du cadre :
+     on laisse la bordure au-dessus de l'effet CRT */
+  inset: 3px;
   pointer-events: none;
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.06) 0,
-      rgba(0, 0, 0, 0.06) 1px,
+      /* Lignes fines discrètes (violet léger, visible sur fond sombre) */
+      var(--scanline-color) 0,
+      var(--scanline-color) 1px,
       transparent 1px,
-      transparent 3px
+      transparent 4px
     );
   mix-blend-mode: multiply;
-  opacity: 0.45;
-  animation: screen-wobble 7s ease-in-out infinite alternate;
+  opacity: 0.4;
+  /* Vitesse augmentée : déplacement plus rapide des scanlines */
+  animation: scanlines-shift 0.5s linear infinite;
+  /* Placé au-dessus du contenu (texte, images, boutons) */
+  z-index: 2;
 }
 
 /* Barre titre — bandeau défilant (credo) en boucle infinie */
@@ -129,6 +224,8 @@ body {
   border-bottom: 1px solid var(--accent);
   font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   overflow: hidden;
+  /* Fond de la barre façon "noir d'écran" (changer via --titlebar-bg) */
+  background: var(--titlebar-bg);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -139,8 +236,9 @@ body {
   align-items: center;
   gap: 0.4rem;
   flex-shrink: 0;
-  /* Bloc plein sous les trois cercles, pour masquer le texte défilant */
-  background: var(--bg);
+  /* Bloc plein sous les trois cercles, pour masquer le texte défilant.
+     Couleur alignée sur la barre de titre (titlebar-bg). */
+  background: var(--titlebar-bg);
   padding: 0.15rem 0.6rem 0.15rem 0.45rem;
   border-radius: 999px;
 }
@@ -150,7 +248,8 @@ body {
   height: 0.7rem;
   border-radius: 50%;
   border: 1px solid var(--accent);
-  background: var(--bg);
+  /* Fond transparent pour laisser apparaître le noir de la titlebar */
+  background: transparent;
   position: relative;
 }
 
@@ -200,7 +299,8 @@ body {
   100% { transform: translateX(-50%); }
 }
 
-/* Ondulation très légère de l'écran */
+/* Animations CRT disponibles mais NON utilisées actuellement sur ::before.
+   À rattacher à .screen-frame::before si besoin plus tard. */
 @keyframes screen-wobble {
   0% {
     transform: translate3d(0, 0, 0) skewY(0.25deg) scaleX(1.01);
@@ -211,6 +311,78 @@ body {
   100% {
     transform: translate3d(0, 0, 0) skewY(0.15deg) scaleX(1.005);
   }
+}
+
+/* Variation très douce de luminosité de l'écran (non utilisée actuellement) */
+@keyframes screen-flicker {
+  0%   { opacity: 0.55; }
+  25%  { opacity: 0.62; }
+  50%  { opacity: 0.58; }
+  75%  { opacity: 0.64; }
+  100% { opacity: 0.6; }
+}
+
+/* Très léger décalage horizontal du motif de lignes (glitch très soft, non utilisé) */
+@keyframes screen-shift {
+  0%   { background-position-x: 0; }
+  25%  { background-position-x: 0.5px; }
+  50%  { background-position-x: 1px; }
+  75%  { background-position-x: -0.5px; }
+  100% { background-position-x: 0; }
+}
+
+/* Effet 1 : léger wobble appliqué à tout le cadre (sans toucher au contenu)
+   pour un look "moniteur un peu instable" mais très discret. */
+@keyframes frame-wobble {
+  0% {
+    transform: translate3d(-1px, 0, 0) rotateZ(-0.6deg);
+  }
+  50% {
+    transform: translate3d(1px, -2px, 0) rotateZ(0.6deg);
+  }
+  100% {
+    transform: translate3d(-1px, 0, 0) rotateZ(-0.4deg);
+  }
+}
+
+/* Effet 2 : micro "jitter" horizontal de l'overlay, sans bouger le contenu */
+@keyframes frame-jitter {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(1px);
+  }
+  100% {
+    transform: translateX(-1px);
+  }
+}
+
+/* Effet 3 : flash RGB ponctuel très léger (chromatic aberration) */
+@keyframes frame-rgb-flash {
+  0%, 90% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  92% {
+    opacity: 0.18;
+    transform: translateX(-1px);
+  }
+  96% {
+    opacity: 0.22;
+    transform: translateX(1px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+/* Effet 4 : déplacement vertical très léger des scanlines */
+@keyframes scanlines-shift {
+  /* Défilement continu du bas vers le haut */
+  0%   { background-position-y: 0; }
+  100% { background-position-y: -4px; }
 }
 
 /* Contenu partagé en 2 zones */
@@ -229,16 +401,20 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   border-right: 2px solid var(--accent);
-  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  /* Taille par défaut plus lisible sur écrans moyens/grands */
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
   line-height: 1.6;
   min-height: 0;
+  /* Fond du panneau de contenu principal (changer via --panel-bg) */
+  background: var(--panel-bg);
 }
 
 .screen-info::-webkit-scrollbar {
   width: 8px;
 }
 .screen-info::-webkit-scrollbar-track {
-  background: var(--bg);
+  /* Utilise le même fond que le panneau pour suivre le thème sombre/clair */
+  background: var(--panel-bg);
 }
 .screen-info::-webkit-scrollbar-thumb {
   background: var(--accent);
@@ -270,7 +446,8 @@ body {
 .news-item-title {
   display: inline;
   background: var(--accent);
-  color: var(--bg);
+  /* Texte surligné : fond violet, texte noir lisible */
+  color: var(--on-accent);
   padding: 0.15em 0.4em;
   font-weight: 600;
 }
@@ -285,6 +462,8 @@ body {
   font-size: 0.9em;
   line-height: 1.5;
   color: var(--accent);
+  /* Infos secondaires (dates / lieux) : moins prioritaires que le titre + corps */
+  font-style: italic;
 }
 
 .news-item-event .news-item-content {
@@ -350,17 +529,24 @@ body {
   flex-direction: column;
   gap: 0.5rem;
   overflow-y: auto;
+  /* Fond du panneau de boutons (changer via --panel-bg) */
+  background: var(--panel-bg);
 }
 
 .screen-controls button {
-  background: var(--bg);
+  /* Fond par défaut des boutons aligné sur le fond des panneaux (panel-bg) */
+  background: var(--panel-bg);
   color: var(--accent);
   border: 2px solid var(--accent);
   padding: 0.75rem 1rem;
   font-family: 'IBM Plex Sans', 'IBM Plex Mono', 'Courier New', monospace;
-  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  /* Taille lisible par défaut sur moyens/grands écrans */
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  font-weight: 600;
   cursor: pointer;
   text-align: left;
+  /* Petit effet 3D discret sur le texte */
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
   transform-origin: center;
   transition: transform 150ms ease-out;
 }
@@ -368,8 +554,8 @@ body {
 .screen-controls button:hover,
 .screen-controls button.active {
   background: var(--accent);
-  color: var(--bg);
-  animation: screen-wobble 0.9s ease-in-out infinite;
+  /* Texte des boutons en surbrillance sur fond violet */
+  color: var(--on-accent);
 }
 
 .screen-controls button:disabled {
@@ -381,6 +567,18 @@ body {
 @media (max-width: 768px) {
   .site-header {
     padding: 1.4rem 0.8rem 0.6rem;
+  }
+
+  /* Barre de titre plus haute et texte plus grand sur petits écrans */
+  .screen-titlebar {
+    padding: 0.6rem 0.8rem;
+    font-size: clamp(0.85rem, 2.8vw, 1.05rem);
+  }
+
+  /* Icônes de fenêtre légèrement agrandies */
+  .window-btn {
+    width: 0.9rem;
+    height: 0.9rem;
   }
 
   .site-logo {
@@ -405,6 +603,8 @@ body {
   .screen-info {
     border-right: none;
     border-bottom: 2px solid var(--accent);
+    /* Corps de texte plus grand et lisible sur petits écrans */
+    font-size: clamp(1rem, 4vw, 1.15rem);
   }
 
   .screen-controls {
@@ -421,11 +621,24 @@ body {
     flex: 1;
     min-width: 80px;
     text-align: center;
+    /* Boutons légèrement plus grands que le corps pour être très lisibles */
+    font-size: clamp(1rem, 4vw, 1.2rem);
   }
 }
 
 /* Très petits mobiles : logo encore plus lisible */
 @media (max-width: 480px) {
+  /* Encore un peu plus de présence pour la barre de titre sur très petits écrans */
+  .screen-titlebar {
+    padding: 0.7rem 0.9rem;
+    font-size: clamp(0.95rem, 3.4vw, 1.15rem);
+  }
+
+  .window-btn {
+    width: 1rem;
+    height: 1rem;
+  }
+
   .site-logo {
     font-size: clamp(2.8rem, 11vw, 4.4rem);
     line-height: 1.05;

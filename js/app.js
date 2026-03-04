@@ -228,4 +228,35 @@ function renderButtons() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', loadData);
+function initThemeToggle() {
+  const root = document.documentElement; // <html>
+  const toggle = document.querySelector('[data-theme-toggle]');
+  if (!toggle) return;
+
+  // Si aucun thème n'est posé explicitement, on part sur le thème CLAIR par défaut
+  if (!root.classList.contains('theme-dark') && !root.classList.contains('theme-light')) {
+    root.classList.add('theme-light');
+  }
+
+  function syncLabel() {
+    const isDark = root.classList.contains('theme-dark');
+    // Icône seule : lune pour sombre, soleil pour clair
+    toggle.textContent = isDark ? '☾' : '☼';
+    toggle.setAttribute('aria-pressed', String(!isDark));
+    toggle.setAttribute('aria-label', isDark ? 'Basculer en thème clair' : 'Basculer en thème sombre');
+  }
+
+  toggle.addEventListener('click', () => {
+    const isDark = root.classList.contains('theme-dark');
+    root.classList.toggle('theme-dark', !isDark);
+    root.classList.toggle('theme-light', isDark);
+    syncLabel();
+  });
+
+  syncLabel();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  initThemeToggle();
+});
