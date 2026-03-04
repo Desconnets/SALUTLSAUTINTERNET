@@ -10,8 +10,9 @@
      Valeur par défaut = plus discrète (mode clair) */
   --scanline-color: rgba(107, 0, 221, 0.18);
 
-  /* Couleur du texte quand le fond est l’accent (boutons hover, titres surlignés) */
-  --on-accent: #000000;
+  /* Couleur du texte quand le fond est l’accent (boutons hover, titres surlignés)
+     Par défaut (mode clair) : texte clair sur fond violet */
+  --on-accent: #e8e8e8;
 
   /* Couleurs sémantiques d'UI (pour changer les fonds sans tout toucher).
      Valeurs par défaut = thème sombre actuel. Les thèmes viendront les surcharger. */
@@ -26,11 +27,20 @@
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100%;
+  /* Hauteur calée sur la taille de la fenêtre : pas de scroll de page,
+     uniquement du scroll interne dans la zone d'infos de l'écran. */
+  height: 100%;
+  overflow: hidden;
   font-family: 'Inter', 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   /* Fond global : utiliser --page-bg pour changer partout en une fois */
   background: var(--page-bg);
   color: var(--accent);
+}
+
+html {
+  /* Position relative pour pouvoir tester un overlay global (scanlines) sur tout le document.
+     Pour revenir au comportement d’avant, supprimer simplement cette ligne. */
+  position: relative;
 }
 
 body {
@@ -57,6 +67,8 @@ body {
   --panel-bg: var(--bg-monitor);
   /* En sombre on renforce les scanlines pour qu’elles soient bien visibles */
   --scanline-color: rgba(107, 0, 221, 0.45);
+  /* En sombre, le texte sur fond accent (surlignage) repasse en foncé pour garder le contraste */
+  --on-accent: #000000;
 }
 
 /* --- Header avec logo --- */
@@ -174,9 +186,23 @@ body {
   /* animation: frame-wobble 7s ease-in-out infinite alternate; */
 }
 
-/* Légère ondulation / texture d'écran (subtile) – effets CRT désactivés
-   pour l’instant, bloc laissé ici comme mémo. */
-.screen-frame::before {
+/* Écrans moyens : on cale la hauteur sur le viewport pour
+   garder la fenêtre entière visible avec un léger liseré en bas. */
+@media (max-width: 1024px) {
+  .screen-frame {
+    height: calc(100vh - 7rem);
+    max-height: calc(100vh - 7rem);
+    margin: 0.75rem auto 1rem;
+  }
+}
+
+/* Légère ondulation / texture d'écran (subtile) – effets CRT.
+   TEST : on applique temporairement les scanlines à la fois sur l'écran
+   (.screen-frame::before) ET sur tout le document (html::before).
+   Pour revenir au comportement d’origine (scanlines uniquement sur l'écran),
+   il suffira de retirer "html::before" de ce sélecteur et la règle html::before plus bas. */
+.screen-frame::before,
+html::before {
   /* Effet 3 (flash RGB) – désactivé pour l’instant.
      À combiner plus tard avec un autre effet (scanlines ou jitter)
      en remettant le bloc d’overlay + animation frame-rgb-flash. */
@@ -216,6 +242,13 @@ body {
   animation: scanlines-shift 0.5s linear infinite;
   /* Placé au-dessus du contenu (texte, images, boutons) */
   z-index: 2;
+}
+
+/* TEST global scanlines :
+   on étend l’overlay de scanlines à tout le document (html).
+   Pour revenir en arrière, supprimer ce bloc. */
+html::before {
+  inset: 0;
 }
 
 /* Barre titre — bandeau défilant (credo) en boucle infinie */
@@ -433,9 +466,10 @@ body {
   border-bottom: none;
 }
 .screen-info-block h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1em;
-  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  /* Titre de "chapitre" pour chaque bloc de contenu (Prog, Flashback, Qui on est) */
+  font-size: 1.15em;
+  font-weight: 700;
 }
 
 .screen-info-block p {
@@ -589,10 +623,12 @@ body {
   .screen-frame {
     width: calc(100vw - 1.5rem);
     max-width: calc(100vw - 1.5rem);
-    height: auto;
-    max-height: none;
-    margin: 0.75rem auto 0;
-    min-height: 75vh;
+    /* Sur mobile, on fige la hauteur sur le viewport pour que
+       la fenêtre ne change jamais de taille quand le contenu arrive.
+       Le scroll reste interne à la zone d'infos. */
+    height: calc(100vh - 7.5rem);
+    max-height: calc(100vh - 7.5rem);
+    margin: 0.5rem auto 1rem;
     border-radius: 0;
   }
 

@@ -5,9 +5,24 @@ const WELCOME_MEDIA = 'assets/img/welcome.gif';
 
 const NEWS_DATA = {
   categories: [
-    { id: "prog", label: "Prog", symbol: "▸", subtitle: "à venir" },
-    { id: "flashback", label: "Flashback", symbol: "◂" },
-    { id: "qui-on-est", label: "Qui on est", symbol: "◆" }
+    {
+      id: "prog",
+      label: "Prog",
+      symbol: "▸",
+      subtitle: " — nos prochaines soirées 2000s (viens animer les pixels)"
+    },
+    {
+      id: "flashback",
+      label: "Flashback",
+      symbol: "◂",
+      subtitle: " — nos anciennes soirées, photos & souvenirs de kids MSN"
+    },
+    {
+      id: "qui-on-est",
+      label: "Qui on est",
+      symbol: "◆",
+      subtitle: " — le crew Salut Salut Internet (geeks, bières & popculture)"
+    }
   ],
   items: [
     // Prog (à venir)
