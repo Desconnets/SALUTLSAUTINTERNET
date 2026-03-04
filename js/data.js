@@ -7,8 +7,12 @@ const WELCOME_MEDIA = 'assets/img/welcome.gif';
 
 // Stickers tombants (PNG détourés) : un même type tombe en boucle tant qu’on ne clique pas.
 // Ajouter ici les chemins vers tes PNG (ex. assets/img/stickers/emoji.png).
+// À chaque chute, un sticker est choisi aléatoirement dans cette liste. Ajoute d’autres chemins si tu veux.
 const FALLING_STICKER_URLS = [
   'assets/img/stickers/sticker.png',
+  'assets/img/stickers/sticker2.png',
+  // 'assets/img/stickers/sticker2.png',
+  // 'assets/img/stickers/sticker3.png',
 ];
 
 const NEWS_DATA = {

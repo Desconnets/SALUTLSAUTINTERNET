@@ -351,7 +351,7 @@ const STICKER_BOUNCE = 0.6;
 const STICKER_REST_THRESHOLD = 0.5;
 const STICKER_FLY_UP_SPEED = -14;
 const STICKER_FIRST_DELAY_MS = 2500;
-const STICKER_SPAWN_INTERVAL_MS = 15000;
+const STICKER_SPAWN_INTERVAL_MS = 30000;
 const STICKER_MAX_ON_SCREEN = 4;
 
 let fallingStickerCount = 0;
@@ -423,10 +423,13 @@ function spawnFallingSticker(url) {
 function startStickerRain() {
   const urls = typeof FALLING_STICKER_URLS !== 'undefined' ? FALLING_STICKER_URLS : [];
   if (!urls.length) return;
-  const url = urls[0];
 
-  setTimeout(() => spawnFallingSticker(url), STICKER_FIRST_DELAY_MS);
-  setInterval(() => spawnFallingSticker(url), STICKER_SPAWN_INTERVAL_MS);
+  function randomStickerUrl() {
+    return urls[Math.floor(Math.random() * urls.length)];
+  }
+
+  setTimeout(() => spawnFallingSticker(randomStickerUrl()), STICKER_FIRST_DELAY_MS);
+  setInterval(() => spawnFallingSticker(randomStickerUrl()), STICKER_SPAWN_INTERVAL_MS);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
