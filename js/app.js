@@ -1,5 +1,13 @@
-// --- App actualités régionales ---
-// Titres surlignés (couleurs inversées), saut de ligne entre chaque actualité
+// --- App "Salut Salut Internet" ---
+// Fenêtre unique façon écran CRT avec chapitres (Prog / Flashback / Qui on est)
+// et cartes d'événements normalisées :
+// - Titre de chapitre (h2) = category.heading (ton éditorial années 2000)
+// - Carte événement :
+//   1) Bandeau de titre (.news-item-title) :
+//      "[date_sans_jour] — [titre_court]" (voir getEventTitleLabel)
+//   2) Meta (.news-item-meta) : "date • heure • adresse"
+//   3) Texte (.news-item-content)
+//   4) Media (.news-item-media) : spécifique ou fallback aléatoire
 
 let newsData = { categories: [], items: [] };
 let contentHistory = [];
@@ -57,10 +65,25 @@ function formatCategoryBlock(category, items) {
 
 function buildMetaParts(item) {
   const meta = [];
-  if (item.date) meta.push(item.date);
+  // Nouvelle règle éditoriale :
+  // la date est déjà dans le bandeau de titre de l'événement,
+  // donc la meta ne contient plus QUE l'horaire et le lieu.
   if (item.time && item.time !== '—') meta.push(item.time);
   if (item.address) meta.push(item.address);
   return meta;
+}
+
+function getDateWithoutWeekday(dateStr) {
+  if (!dateStr) return '';
+  const parts = dateStr.split(',');
+  // Ex: "Ven, 6 févr. 2026" -> "6 févr. 2026"
+  return (parts.length > 1 ? parts[1] : parts[0]).trim();
+}
+
+function getEventTitleLabel(item) {
+  const baseTitle = item.title || '';
+  const dateLabel = getDateWithoutWeekday(item.date || '');
+  return dateLabel ? `${dateLabel} — ${baseTitle}` : baseTitle;
 }
 
 function formatEventItem(item) {
@@ -79,7 +102,7 @@ function formatEventItem(item) {
     const meta = buildMetaParts(item);
     return `
     <div class="news-item news-item-event">
-      <span class="news-item-title">${item.title}</span>
+      <span class="news-item-title">${getEventTitleLabel(item)}</span>
       <div class="news-item-meta">${meta.join(' • ')}</div>
       <span class="news-item-content">${item.content}</span>${mediaHtml}
     </div>`;
@@ -232,7 +255,7 @@ function renderHistoryAndType() {
       const titleEl = itemDiv.querySelector('.news-item-title');
       const metaEl = itemDiv.querySelector('.news-item-meta');
       const contentEl = itemDiv.querySelectorAll('.news-item-content')[0];
-      typeText(titleEl, item.title, () => {
+      typeText(titleEl, getEventTitleLabel(item), () => {
         typeText(metaEl, metaText, () => {
           typeText(contentEl, item.content || '', () => {
             // Toujours appeler appendMedia : s'il n'y a pas de media spécifique,
@@ -252,7 +275,7 @@ function renderHistoryAndType() {
       if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
       const titleEl = itemDiv.querySelector('.news-item-title');
       const contentEl = itemDiv.querySelector('.news-item-content');
-      typeText(titleEl, item.title, () => {
+      typeText(titleEl, getEventTitleLabel(item), () => {
         typeText(contentEl, ' ' + (item.content || ''), () => {
           // Idem ici : fallback si aucun media n'est défini.
           const hadMedia = appendMedia(itemDiv, item.media);

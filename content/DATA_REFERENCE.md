@@ -141,3 +141,37 @@ Fichier de référence contenant l'ADN, les pitchs, les événements et les guid
 - Un nouveau bloc (chapitre) ne commence son animation **qu’une fois** :
   - que tous les événements du bloc précédent ont fini de taper leur texte,
   - et que leur media associé (ou fallback par défaut) a été inséré.
+
+---
+
+## Structure éditoriale — Fenêtre & événements
+
+- **Chapitre / bloc racine** (`.screen-info-block`)
+  - Correspond à une catégorie de bouton : `Prog`, `Flashback`, `Qui on est`.
+  - Titre de chapitre (`h2`) :
+    - Défini par `category.heading` dans `js/data.js`.
+    - Style : tout en MAJUSCULES, centré, léger effet "bannière 2000s".
+
+- **Carte d’événement** (`.news-item.news-item-event`)
+  - Encadré unique commun à tous les événements (Prog + Flashback).
+  - Contenu normalisé :
+    1. **Bandeau de titre** (`.news-item-title`) :
+       - Label calculé côté JS :  
+         `"[date_sans_jour] — [titre_court]"`  
+         ex. `2 août 2025 — Panorama 2000s Summer Hits`.
+       - `date_sans_jour` : on enlève le jour (`Ven,`, `Sam,`…) de `item.date`.
+       - `titre_court` : champ `title` dans `js/data.js`, sans lieu ni "soirée années 2000".
+       - Design : bandeau dégradé (charte couleurs), bord droit arrondi, contour + halo ROSE FLASHY en sombre.
+    2. **Meta** (`.news-item-meta`) :
+       - Ligne unique : `heure • adresse` (filtrée via `buildMetaParts`).
+       - **La date n’est plus dans la meta** car elle est déjà présente au début du titre d’événement.
+       - Style : italic + souligné, couleur `var(--accent)`.
+    3. **Texte** (`.news-item-content`) :
+       - Corps descriptif de l’événement.
+    4. **Media** (`.news-item-media`) :
+       - Si `item.media` défini → utilisé tel quel.
+       - Sinon → GIF aléatoire parmi `DEFAULT_MEDIA_URLS` (fallback).
+       - Effet d’apparition de gauche à droite (`media-reveal` + `media-scan`).
+
+- **Événements texte-only** (`.news-item` sans meta)
+  - Utilisent la même structure de titre (bandeau) + contenu, sans bloc meta ni encadré spécifique d’événement.

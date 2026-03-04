@@ -10,6 +10,12 @@
      Valeur par défaut = plus discrète (mode clair) */
   --scanline-color: rgba(107, 0, 221, 0.18);
 
+  /* Variables de mise en forme éditoriale (cartes) */
+  --card-radius: 6px;
+  --card-radius-right: 18px;      /* angle sup. droit légèrement plus arrondi */
+  --card-padding-inline: 0.75rem;
+  --card-padding-bottom: 0.5rem;
+
   /* Couleur du texte quand le fond est l’accent (boutons hover, titres surlignés)
      Par défaut (mode clair) : texte clair sur fond violet */
   --on-accent: #e8e8e8;
@@ -53,7 +59,9 @@ body {
 /* --- Thèmes clair / sombre via classes sur la racine (:root / <html>) --- */
 /* Thème clair : réutilise le fond clair d’origine pour l’ensemble de l’UI */
 :root.theme-light {
-  --page-bg: var(--bg);
+  /* Fond de page clair avec une teinte ROSE FLASHY,
+     mais en version beaucoup plus subtile / pastel. */
+  --page-bg: #ffb7df; /* dérivé adouci de #ff309c */
   --frame-bg: var(--bg);
   --titlebar-bg: var(--bg);
   --panel-bg: var(--bg);
@@ -492,7 +500,7 @@ html::before {
 
 .news-item-title {
   /* Titre d'événement en bandeau façon "skyblog" */
-  display: block;
+  display: block; /* pleine largeur de la carte événement */
   /* Bandeau légèrement plus clair que le mauve principal,
      avec un petit effet de relief type barre de fenêtre. */
   background: rgba(107, 0, 221, 0.85);
@@ -503,6 +511,10 @@ html::before {
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.55);
+  position: relative;
+  /* Forme "galbée" côté droit : bandeau pleine largeur avec
+     bord gauche droit et bord droit arrondi. */
+  border-radius: 0 999px 999px 0;
 }
 
 /* Variante du bandeau de titre en mode sombre :
@@ -515,17 +527,17 @@ html::before {
     #6b00dd 50%,  /* ULTRA VIOLET au centre */
     #23004f 100%  /* mauve plus sombre à droite */
   );
-  /* Texte avec la même teinte que le fond d'écran sombre (bg-monitor) */
-  color: #1a1c24;
+  /* Texte noir comme demandé, avec contour ROSE FLASHY bien visible autour des lettres */
+  color: #050509;
   border-top-color: #309c;
   border-bottom-color: rgba(0, 0, 0, 0.85);
-  /* Léger halo rose-flashy derrière le texte + ombre sombre pour la lisibilité */
+  /* Contour + halo ROSE FLASHY pur autour des lettres en sombre */
+  -webkit-text-stroke: 0.7px #309c; /* ROSE FLASHY */
   text-shadow:
-    0 0 4px rgba(48, 156, 204, 0.0), /* placeholder, laissé neutre */
-    0 0 6px rgba(48, 156, 204, 0.0),
-    0 0 5px rgba(48, 156, 204, 0.35),
-    0 0 8px rgba(48, 156, 204, 0.25),
-    0 0 2px rgba(0, 0, 0, 0.7);
+    0 0 3px #309c,
+    0 0 7px #309c,
+    0 0 11px #309c,
+    0 0 3px rgba(0, 0, 0, 1);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.9);
 }
 
@@ -533,12 +545,15 @@ html::before {
   margin-bottom: 1rem;
 }
 
-.news-item-event {
-  /* Carte encadrée pour chaque événement (tous types confondus) */
+.news-item-event,
+.screen-info-block--qui-on-est .news-item {
+  /* Carte encadrée partagée par tous les blocs d'info de type "événement"
+     (Prog, Flashback) ET par les cartes de "Qui on est". */
   border: 1px solid var(--accent);
-  border-radius: 6px;
+  border-radius: var(--card-radius) var(--card-radius-right) var(--card-radius) var(--card-radius);
   overflow: hidden;
   background: var(--frame-bg);
+  position: relative;
 }
 
 .news-item-event .news-item-meta {
@@ -553,10 +568,11 @@ html::before {
   padding: 0.5rem 0.75rem 0;
 }
 
-.news-item-event .news-item-content {
+.news-item-event .news-item-content,
+.screen-info-block--qui-on-est .news-item .news-item-content {
   display: block;
   margin-top: 0.25em;
-  padding: 0 0.75rem 0.5rem;
+  padding: 0 var(--card-padding-inline) var(--card-padding-bottom);
 }
 
 .news-item:last-child {
@@ -568,8 +584,9 @@ html::before {
   margin-top: 0.75rem;
 }
 
-.news-item-event .news-item-media {
-  padding: 0 0.75rem 0.75rem;
+.news-item-event .news-item-media,
+.screen-info-block--qui-on-est .news-item .news-item-media {
+  padding: 0 var(--card-padding-inline) 0.75rem;
 }
 
 /* Images et GIFs dans les blocs */

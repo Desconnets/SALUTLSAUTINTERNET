@@ -30,16 +30,24 @@ const NEWS_DATA = {
   ],
   items: [
     // Prog (à venir)
-    { categoryId: "prog", title: "Hips don't lie 2", date: "Jeudi 3 avril", time: "20h", address: "Café Tropisme — Montpellier", content: "Nouvelle édition de Hips don't lie : ambiance années 2000, hits, paillettes et bonne vibe au Café Tropisme. Viens danser, chanter et crier les refrains que tu connais par cœur.", media: { type: 'image', url: 'assets/img/hips-dont-lie.gif' } },
+    {
+      categoryId: "prog",
+      title: "Hips don't lie 2",
+      date: "Jeudi 3 avril",
+      time: "20h",
+      address: "Café Tropisme — Montpellier",
+      content: "Nouvelle édition de Hips don't lie : boom géante version 2008, bangers 2000s, paillettes, chorés de clips et cris sur les refrains que tu connais par cœur. Feel like a 2000s kid again !",
+      media: { type: 'image', url: 'assets/img/hips-dont-lie.gif' }
+    },
 
     // Flashback (passé) — du plus récent au plus ancien
     {
       categoryId: "flashback",
-      title: "𝙃𝙞𝙥𝙨 𝙙𝙤𝙣'𝙩 𝙡𝙞𝙚 - soirée années 2000 👽🐬",
+      title: "𝙃𝙞𝙥𝙨 𝙙𝙤𝙣'𝙩 𝙡𝙞𝙚 👽🐬",
       date: "Ven, 6 févr. 2026",
       time: "—",
       address: "Café Tropisme · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet",
+      content: "Retour sur la première Hips don't lie : grosse vague de tubes 2000s, sueur, autotune et souvenirs flous de fin de soirée.",
       media: { type: 'image', url: 'assets/img/hips-dont-lie.gif' }
     },
     {
@@ -48,32 +56,32 @@ const NEWS_DATA = {
       date: "Ven, 5 déc. 2025",
       time: "—",
       address: "Marché de Noël de Montpellier · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet"
+      content: "Blindtest spécial années 2000 au marché de Noël du Peyrou : viens jouer solo ou entre potes, tenter de choper quelques cadeaux (ou une orange) avant de basculer en after 2000s."
     },
     {
       categoryId: "flashback",
-      title: "𝗣𝗮𝗻𝗼𝗿𝗮𝗺𝗮 𝟮𝟬𝟬𝟬𝘀 𝗦𝘂𝗺𝗺𝗲𝗿 𝗛𝗶𝘁𝘀 - sur le toit du Corum 👽🐬",
+      title: "𝗣𝗮𝗻𝗼𝗿𝗮𝗺𝗮 𝟮𝟬𝟬𝟬𝘀 𝗦𝘂𝗺𝗺𝗲𝗿 𝗛𝗶𝘁𝘀 👽🐬",
       date: "Sam, 2 août 2025",
       time: "—",
       address: "Corum de Montpellier · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet",
+      content: "Soirée en plein air sur le toit du Corum : enchaînement de summer hits 2000s, grosse dose de fun, happenings absurdes et ambiance de boom de fin d’été.",
       media: { type: 'image', url: 'assets/img/panorama-summer-hits.jpg' }
     },
     {
       categoryId: "flashback",
-      title: "𝗠𝗮𝗿𝗶𝗼 𝗞𝗮𝗿𝘁 𝗪𝗼𝗿𝗹𝗱 + 𝗦𝗼𝗶𝗿𝗲𝗲 𝗮𝗻𝗻𝗲𝗲𝘀 𝟮𝟬𝟬𝟬 ! (lesgo)🎮🕺",
+      title: "𝗠𝗮𝗿𝗶𝗼 𝗞𝗮𝗿𝘁 𝗪𝗼𝗿𝗹𝗱 🎮🕺",
       date: "Jeu, 5 juin 2025",
       time: "—",
       address: "Bar & Microbrasserie La Barbote · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet"
+      content: "Mario Kart World sur Switch 2 suivi d’une vraie soirée 2000s : on découvre ensemble le nouveau jeu puis on laisse les manettes pour un dancefloor plein de hits nostalgiques."
     },
     {
       categoryId: "flashback",
-      title: "𝗣𝗹𝘇 𝗱𝗼𝗻'𝘁 𝘀𝘁𝗼𝗽 𝘁𝗵𝗲 𝗺𝘂𝘀𝗶𝗰 - soirée années 2000 ! 👽🎵🪩",
+      title: "𝗣𝗹𝘇 𝗱𝗼𝗻'𝘁 𝘀𝘁𝗼𝗽 𝘁𝗵𝗲 𝗺𝘂𝘀𝗶𝗰 👽🎵🪩",
       date: "Sam, 8 mars 2025",
       time: "—",
       address: "Le Réservoir Montpellier · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet"
+      content: "Plz don’t stop the music : nuit R&B / pop 2000s au Réservoir, playlists de bangers, surprises et avalanche de références de skyblog et de MTV."
     },
     {
       categoryId: "flashback",
@@ -81,7 +89,7 @@ const NEWS_DATA = {
       date: "Sam, 7 déc. 2024",
       time: "—",
       address: "Bar & Microbrasserie La Barbote · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet",
+      content: "Session « console de salon dans un bar » : une arène jeu vidéo déjantée, joueurs tirés du public, défis préparés aux petits oignons et 1h30 de pixels qui titubent entre deux gorgées.",
       media: { type: 'image', url: 'assets/img/salut-jeux.jpg' }
     },
 
