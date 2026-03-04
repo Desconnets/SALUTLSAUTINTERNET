@@ -69,7 +69,10 @@ function formatEventItem(item) {
     ? (
         effectiveMedia.type === 'link'
           ? `<div class="news-item-media"><a href="${effectiveMedia.url}" target="_blank" rel="noopener">${effectiveMedia.label || effectiveMedia.url}</a></div>`
-          : `<div class="news-item-media media-reveal"><img src="${effectiveMedia.url}" alt="" loading="lazy"></div>`
+          // Pour l'historique déjà affiché, on ne remet PAS la classe
+          // "media-reveal" pour éviter de relancer l'animation quand
+          // un nouveau bloc est déclenché.
+          : `<div class="news-item-media"><img src="${effectiveMedia.url}" alt="" loading="lazy"></div>`
       )
     : '';
   if (item.date || item.time || item.address) {
@@ -134,6 +137,9 @@ function appendMedia(container, media) {
     wrapper.appendChild(img);
   }
   container.appendChild(wrapper);
+  // S'assurer que la zone d'infos suit l'apparition du média
+  const infoEl = document.querySelector('.screen-info');
+  if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
   return true;
 }
 
@@ -202,6 +208,9 @@ function renderHistoryAndType() {
   function typeNextItem() {
     if (itemIndex >= lastBlock.items.length) {
       document.querySelector('.screen-info-block-typing').classList.remove('screen-info-block-typing');
+       // S'assurer qu'à la fin du dernier événement, on est bien scrolled en bas
+       const infoEnd = document.querySelector('.screen-info');
+       if (infoEnd) infoEnd.scrollTop = infoEnd.scrollHeight;
       isTyping = false;
       setButtonsEnabled(true);
       return;
@@ -216,6 +225,10 @@ function renderHistoryAndType() {
       const metaText = buildMetaParts(item).join(' • ');
       itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span><div class="news-item-meta typewriter-target"></div><span class="news-item-content typewriter-target"></span>';
       container.appendChild(itemDiv);
+      // On "pré-shoot" le scroll dès qu'un nouvel événement est inséré,
+      // pour réserver la place du texte + média et garder le bloc visible.
+      const infoOnInsert = document.querySelector('.screen-info');
+      if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
       const titleEl = itemDiv.querySelector('.news-item-title');
       const metaEl = itemDiv.querySelector('.news-item-meta');
       const contentEl = itemDiv.querySelectorAll('.news-item-content')[0];
@@ -235,6 +248,8 @@ function renderHistoryAndType() {
     } else {
       itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span> <span class="news-item-content typewriter-target"></span>';
       container.appendChild(itemDiv);
+      const infoOnInsert = document.querySelector('.screen-info');
+      if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
       const titleEl = itemDiv.querySelector('.news-item-title');
       const contentEl = itemDiv.querySelector('.news-item-content');
       typeText(titleEl, item.title, () => {

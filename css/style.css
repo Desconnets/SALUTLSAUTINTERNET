@@ -468,8 +468,17 @@ html::before {
 .screen-info-block h2 {
   margin: 0 0 0.75rem 0;
   /* Titre de "chapitre" pour chaque bloc de contenu (Prog, Flashback, Qui on est) */
-  font-size: 1.15em;
-  font-weight: 700;
+  font-size: 1.2em;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  /* Petit effet bannière 2000s / skyblog */
+  transform: skewX(-6deg);
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.6),
+    1px 1px 0 rgba(0, 0, 0, 0.8);
 }
 
 /* Hooks pour personnaliser chaque type de bloc si besoin */
@@ -482,13 +491,24 @@ html::before {
 }
 
 .news-item-title {
-  display: inline;
-  /* Titre d'événement : simple gras, sans surlignage */
+  /* Titre d'événement en bannière façon "skyblog" */
+  display: block;
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 0.3em 0.75em;
   font-weight: 700;
 }
 
 .news-item {
   margin-bottom: 1rem;
+}
+
+.news-item-event {
+  /* Carte encadrée pour chaque événement (tous types confondus) */
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--frame-bg);
 }
 
 .news-item-event .news-item-meta {
@@ -500,11 +520,13 @@ html::before {
   /* Infos secondaires (dates / lieux) : moins prioritaires que le titre + corps */
   font-style: italic;
   text-decoration: underline;
+  padding: 0.5rem 0.75rem 0;
 }
 
 .news-item-event .news-item-content {
   display: block;
   margin-top: 0.25em;
+  padding: 0 0.75rem 0.5rem;
 }
 
 .news-item:last-child {
@@ -514,6 +536,10 @@ html::before {
 .news-item-media,
 .welcome-media {
   margin-top: 0.75rem;
+}
+
+.news-item-event .news-item-media {
+  padding: 0 0.75rem 0.75rem;
 }
 
 /* Images et GIFs dans les blocs */
