@@ -9,19 +9,23 @@ const NEWS_DATA = {
       id: "prog",
       label: "Prog",
       symbol: "▸",
-      subtitle: " — nos prochaines soirées 2000s (viens animer les pixels)"
+      subtitle: "",
+      // Titre de chapitre affiché dans la fenêtre d'info
+      heading: "Nos prochaines soirée dinguooo"
     },
     {
       id: "flashback",
       label: "Flashback",
       symbol: "◂",
-      subtitle: " — nos anciennes soirées, photos & souvenirs de kids MSN"
+      subtitle: "",
+      heading: "Nos soirées passées (souvenirs de kids MSN)"
     },
     {
       id: "qui-on-est",
       label: "Qui on est",
       symbol: "◆",
-      subtitle: " — le crew Salut Salut Internet (geeks, bières & popculture)"
+      subtitle: "",
+      heading: "Le crew Salut Salut Internet"
     }
   ],
   items: [
@@ -69,8 +73,7 @@ const NEWS_DATA = {
       date: "Sam, 8 mars 2025",
       time: "—",
       address: "Le Réservoir Montpellier · Montpellier",
-      content: "Évènement organisé par Salut Salut Internet",
-      media: { type: 'image', url: 'assets/img/plz-dont-stop.gif' }
+      content: "Évènement organisé par Salut Salut Internet"
     },
     {
       categoryId: "flashback",

@@ -5,6 +5,31 @@ let newsData = { categories: [], items: [] };
 let contentHistory = [];
 let isTyping = false;
 const TYPE_SPEED = 25;
+// Délai approximatif de l’animation des médias (CSS media-scan)
+const MEDIA_ANIM_DELAY_MS = 1400;
+
+// Médias par défaut à utiliser quand un événement (ou l'écran d'accueil)
+// n'a pas encore d'image / gif associé.
+// Pour ajouter ou retirer des GIF par défaut, il suffit de modifier
+// cette liste de chemins, sans toucher au reste du code.
+const DEFAULT_MEDIA_URLS = [
+  'assets/img/default-01.gif',
+  'assets/img/default-02.gif',
+  'assets/img/default-03.gif',
+  'assets/img/default-04.gif',
+  'assets/img/default-05.gif',
+];
+let lastDefaultMediaIndex = -1;
+
+function getDefaultMedia() {
+  if (!DEFAULT_MEDIA_URLS.length) return null;
+  let index = Math.floor(Math.random() * DEFAULT_MEDIA_URLS.length);
+  if (DEFAULT_MEDIA_URLS.length > 1 && index === lastDefaultMediaIndex) {
+    index = (index + 1) % DEFAULT_MEDIA_URLS.length;
+  }
+  lastDefaultMediaIndex = index;
+  return { type: 'image', url: DEFAULT_MEDIA_URLS[index] };
+}
 
 function getCategory(categoryId) {
   return newsData.categories.find(c => c.id === categoryId);
@@ -15,23 +40,44 @@ function getItemsForCategory(categoryId) {
 }
 
 function formatCategoryBlock(category, items) {
-  const subtitle = category.subtitle ? ` — ${category.subtitle}` : '';
-  const label = `${category.label} ${category.symbol}${subtitle}`;
-  return { label, items, category };
+  // Titre de chapitre affiché dans la fenêtre.
+  // Priorité :
+  // 1) category.heading (texte éditorial court, style années 2000) si présent
+  // 2) fallback sur label + symbol (+ éventuel sous-titre)
+  let heading;
+  if (category.heading) {
+    heading = category.heading;
+  } else if (category.subtitle) {
+    heading = `${category.label} ${category.symbol} — ${category.subtitle}`;
+  } else {
+    heading = `${category.label} ${category.symbol}`;
+  }
+  return { label: heading, items, category };
+}
+
+function buildMetaParts(item) {
+  const meta = [];
+  if (item.date) meta.push(item.date);
+  if (item.time && item.time !== '—') meta.push(item.time);
+  if (item.address) meta.push(item.address);
+  return meta;
 }
 
 function formatEventItem(item) {
-  const mediaHtml = (item.media && item.media.url) ? `<div class="news-item-media">${item.media.type === 'link' ? `<a href="${item.media.url}" target="_blank" rel="noopener">${item.media.label || item.media.url}</a>` : `<img src="${item.media.url}" alt="" loading="lazy">`}</div>` : '';
+  const effectiveMedia = (item.media && item.media.url) ? item.media : getDefaultMedia();
+  const mediaHtml = (effectiveMedia && effectiveMedia.url)
+    ? (
+        effectiveMedia.type === 'link'
+          ? `<div class="news-item-media"><a href="${effectiveMedia.url}" target="_blank" rel="noopener">${effectiveMedia.label || effectiveMedia.url}</a></div>`
+          : `<div class="news-item-media media-reveal"><img src="${effectiveMedia.url}" alt="" loading="lazy"></div>`
+      )
+    : '';
   if (item.date || item.time || item.address) {
-    const meta = [];
-    if (item.date && item.time) meta.push(`${item.date} • ${item.time}`);
-    else if (item.date) meta.push(item.date);
-    else if (item.time && item.time !== '—') meta.push(item.time);
-    if (item.address) meta.push(item.address);
+    const meta = buildMetaParts(item);
     return `
     <div class="news-item news-item-event">
       <span class="news-item-title">${item.title}</span>
-      <div class="news-item-meta">${meta.join('<br>')}</div>
+      <div class="news-item-meta">${meta.join(' • ')}</div>
       <span class="news-item-content">${item.content}</span>${mediaHtml}
     </div>`;
   }
@@ -68,40 +114,41 @@ function loadData() {
 }
 
 function appendMedia(container, media) {
-  if (!media || !media.url) return;
+  const effectiveMedia = (media && media.url) ? media : getDefaultMedia();
+  if (!effectiveMedia || !effectiveMedia.url) return false;
   const wrapper = document.createElement('div');
   wrapper.className = 'news-item-media';
-  if (media.type === 'link') {
+  if (effectiveMedia.type === 'link') {
     const a = document.createElement('a');
-    a.href = media.url;
+    a.href = effectiveMedia.url;
     a.target = '_blank';
     a.rel = 'noopener';
-    a.textContent = media.label || media.url;
+    a.textContent = effectiveMedia.label || effectiveMedia.url;
     wrapper.appendChild(a);
   } else {
     const img = document.createElement('img');
-    img.src = media.url;
+    img.src = effectiveMedia.url;
     img.alt = '';
     img.loading = 'lazy';
     wrapper.classList.add('media-reveal');
     wrapper.appendChild(img);
   }
   container.appendChild(wrapper);
+  return true;
 }
 
 function showWelcome() {
   const info = document.querySelector('.screen-info');
   const welcomeText = 'Feel like a 2000s kid again. Clique pour explorer.';
-  const welcomeMedia = typeof WELCOME_MEDIA !== 'undefined' ? WELCOME_MEDIA : '';
   info.innerHTML = '<div class="screen-info-block"><p><span class="typewriter-target"></span></p><div class="welcome-media"></div></div>';
   const target = info.querySelector('.typewriter-target');
   const mediaContainer = info.querySelector('.welcome-media');
   isTyping = true;
   setButtonsEnabled(false);
   typeText(target, welcomeText, () => {
-    if (welcomeMedia) {
-      appendMedia(mediaContainer, { type: 'gif', url: welcomeMedia });
-    }
+    // Utilise toujours un GIF aléatoire parmi les défauts,
+    // comme pour les événements (aucun cas spécial).
+    appendMedia(mediaContainer, null);
     const infoEl = document.querySelector('.screen-info');
     if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
     isTyping = false;
@@ -130,14 +177,14 @@ function renderHistoryAndType() {
   const lastBlock = contentHistory[contentHistory.length - 1];
 
   let html = fullBlocks.map(block => `
-    <div class="screen-info-block">
+    <div class="screen-info-block screen-info-block--${block.category.id}">
       <h2>${block.label}</h2>
       <div class="news-items">${blockToHtml(block)}</div>
     </div>
   `).join('');
 
   html += `
-    <div class="screen-info-block screen-info-block-typing">
+    <div class="screen-info-block screen-info-block--${lastBlock.category.id} screen-info-block-typing">
       <h2>${lastBlock.label}</h2>
       <div class="news-items" id="typing-container"></div>
     </div>
@@ -166,12 +213,7 @@ function renderHistoryAndType() {
     itemDiv.className = hasEventMeta ? 'news-item news-item-event' : 'news-item';
 
     if (hasEventMeta) {
-      const meta = [];
-      if (item.date && item.time) meta.push(`${item.date} • ${item.time}`);
-      else if (item.date) meta.push(item.date);
-      else if (item.time && item.time !== '—') meta.push(item.time);
-      if (item.address) meta.push(item.address);
-      const metaText = meta.join(' • ');
+      const metaText = buildMetaParts(item).join(' • ');
       itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span><div class="news-item-meta typewriter-target"></div><span class="news-item-content typewriter-target"></span>';
       container.appendChild(itemDiv);
       const titleEl = itemDiv.querySelector('.news-item-title');
@@ -180,10 +222,13 @@ function renderHistoryAndType() {
       typeText(titleEl, item.title, () => {
         typeText(metaEl, metaText, () => {
           typeText(contentEl, item.content || '', () => {
-            metaEl.innerHTML = metaText.replace(/ • /g, '<br>');
-            if (item.media && item.media.url) appendMedia(itemDiv, item.media);
+            // Toujours appeler appendMedia : s'il n'y a pas de media spécifique,
+            // un fallback par défaut sera utilisé.
+            const hadMedia = appendMedia(itemDiv, item.media);
             itemIndex++;
-            setTimeout(typeNextItem, 50);
+            // Si un media est présent, on laisse le temps à l’animation
+            // de se jouer avant de passer à l’événement suivant.
+            setTimeout(typeNextItem, hadMedia ? MEDIA_ANIM_DELAY_MS : 50);
           });
         });
       });
@@ -194,9 +239,10 @@ function renderHistoryAndType() {
       const contentEl = itemDiv.querySelector('.news-item-content');
       typeText(titleEl, item.title, () => {
         typeText(contentEl, ' ' + (item.content || ''), () => {
-          if (item.media && item.media.url) appendMedia(itemDiv, item.media);
+          // Idem ici : fallback si aucun media n'est défini.
+          const hadMedia = appendMedia(itemDiv, item.media);
           itemIndex++;
-          setTimeout(typeNextItem, 50);
+          setTimeout(typeNextItem, hadMedia ? MEDIA_ANIM_DELAY_MS : 50);
         });
       });
     }

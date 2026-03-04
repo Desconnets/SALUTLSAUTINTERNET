@@ -112,3 +112,32 @@ Fichier de référence contenant l'ADN, les pitchs, les événements et les guid
 | Corum (toit) | Montpellier |
 | Café Tropisme | Montpellier |
 | Bar du marché de Noël | Peyrou, Montpellier |
+
+---
+
+## TODO UI — Thèmes clair / sombre (backgrounds)
+
+- Garder **deux niveaux de fond** via les variables CSS :
+  - `--page-bg` : fond global de la page (`html, body`).
+  - `--frame-bg` : fond de la fenêtre principale (`.screen-frame`).
+- **Intention pour plus tard** :
+  - Dans le thème clair ET dans le thème sombre :
+    - Avoir un **fond global** (`--page-bg`) un peu plus **foncé / prononcé**.
+    - Avoir un **fond de fenêtre** (`--frame-bg`) un peu plus **clair** que la page,
+      pour renforcer l’effet “écran cathodique posé sur un mur”.
+  - Les autres blocs (titlebar, panneaux, etc.) devront ensuite s’aligner
+    sur ce duo `page-bg` / `frame-bg`.
+
+---
+
+## Règles d’animation (typo + médias)
+
+- Tant que l’animation **typewriter** + l’apparition du **media** (image / gif)
+  d’un bloc en cours ne sont pas terminées :
+  - Les **événements suivants** du même bloc ne sont pas encore créés.
+  - Les **boutons de navigation** (Prog / Flashback / Qui on est) sont désactivés
+    (`isTyping === true` + `setButtonsEnabled(false)`), donc aucun **nouveau bloc
+    d’information** ne peut être déclenché.
+- Un nouveau bloc (chapitre) ne commence son animation **qu’une fois** :
+  - que tous les événements du bloc précédent ont fini de taper leur texte,
+  - et que leur media associé (ou fallback par défaut) a été inséré.

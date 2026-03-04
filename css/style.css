@@ -472,18 +472,19 @@ html::before {
   font-weight: 700;
 }
 
+/* Hooks pour personnaliser chaque type de bloc si besoin */
+.screen-info-block--prog {}
+.screen-info-block--flashback {}
+.screen-info-block--qui-on-est {}
+
 .screen-info-block p {
   white-space: pre-line;
 }
 
-/* Titre d’actualité : surligné (couleurs inversées) */
 .news-item-title {
   display: inline;
-  background: var(--accent);
-  /* Texte surligné : fond violet, texte noir lisible */
-  color: var(--on-accent);
-  padding: 0.15em 0.4em;
-  font-weight: 600;
+  /* Titre d'événement : simple gras, sans surlignage */
+  font-weight: 700;
 }
 
 .news-item {
@@ -498,6 +499,7 @@ html::before {
   color: var(--accent);
   /* Infos secondaires (dates / lieux) : moins prioritaires que le titre + corps */
   font-style: italic;
+  text-decoration: underline;
 }
 
 .news-item-event .news-item-content {
