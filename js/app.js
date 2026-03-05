@@ -42,6 +42,16 @@ function getDefaultMedia() {
   return { type: 'image', url: DEFAULT_MEDIA_URLS[index] };
 }
 
+function normalizeMedia(raw) {
+  if (!raw) return null;
+  // Nouveau format (Decap) : champ "media" = simple string (chemin d'image)
+  if (typeof raw === 'string') {
+    return { type: 'image', url: raw };
+  }
+  // Ancien format : objet { type, url }
+  return raw;
+}
+
 function getCategory(categoryId) {
   return newsData.categories.find(c => c.id === categoryId);
 }
@@ -90,7 +100,8 @@ function getEventTitleLabel(item) {
 }
 
 function formatEventItem(item) {
-  const effectiveMedia = (item.media && item.media.url) ? item.media : getDefaultMedia();
+  const mediaObj = normalizeMedia(item.media);
+  const effectiveMedia = (mediaObj && mediaObj.url) ? mediaObj : getDefaultMedia();
   const mediaHtml = (effectiveMedia && effectiveMedia.url)
     ? (
         effectiveMedia.type === 'link'
@@ -162,7 +173,8 @@ function initApp() {
 }
 
 function appendMedia(container, media) {
-  const effectiveMedia = (media && media.url) ? media : getDefaultMedia();
+  const mediaObj = normalizeMedia(media);
+  const effectiveMedia = (mediaObj && mediaObj.url) ? mediaObj : getDefaultMedia();
   if (!effectiveMedia || !effectiveMedia.url) return false;
   const wrapper = document.createElement('div');
   wrapper.className = 'news-item-media';

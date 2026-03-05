@@ -20,10 +20,6 @@ collections:
         label: "Événements & textes"
         file: "content/editorial.json"
         fields:
-          - name: welcomeMedia
-            label: "Image/GIF d'accueil"
-            widget: string
-            hint: "Ex: assets/img/welcome.gif"
           - name: categories
             label: "Catégories (Prog, Flashback, Qui on est)"
             widget: list
@@ -38,14 +34,12 @@ collections:
             fields:
               - { name: categoryId, label: "Catégorie", widget: select, options: ["prog", "flashback", "qui-on-est"] }
               - { name: title, label: "Titre", widget: string }
-              - { name: date, label: "Date", widget: string, required: false }
-              - { name: time, label: "Heure", widget: string, required: false }
-              - { name: address, label: "Adresse", widget: string, required: false }
+              - { name: date, label: "Date (texte libre)", widget: string, required: false, hint: "Exemple : Samedi 7 décembre" }
+              - { name: time, label: "Heure", widget: string, required: false, hint: "Exemple : 20h" }
+              - { name: address, label: "Adresse", widget: string, required: false, hint: "Exemple : Nom du lieu — Ville" }
               - { name: content, label: "Description", widget: text }
-              - label: "Image (optionnel)"
-                name: media
-                widget: object
+              - name: media
+                label: "Image / GIF (optionnel)"
+                widget: image
                 required: false
-                fields:
-                  - { name: type, label: "Type", widget: select, options: ["image"] }
-                  - { name: url, label: "Chemin (ex: assets/img/photo.jpg)", widget: string }
+                hint: "Tu peux uploader ou choisir une image/GIF. Si tu laisses vide, un GIF par défaut sera utilisé."
