@@ -2,9 +2,9 @@
 # Pour édition locale : lancez `npx decap-server` puis ouvrez http://localhost:8080/admin/
 
 backend:
-  name: github
-  repo: Desconnets/SALUTLSAUTINTERNET
+  name: git-gateway
   branch: main
+  repo: Desconnets/SALUTLSAUTINTERNET
 
 media_folder: "assets/img"
 public_folder: "assets/img"
