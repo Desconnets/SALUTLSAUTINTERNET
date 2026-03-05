@@ -54,6 +54,11 @@
   <script>
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", function(user) {
+        var hash = window.location.hash || "";
+        // Si on arrive avec une invitation ou un reset, on ouvre la modale
+        if (hash.indexOf("invite_token=") !== -1 || hash.indexOf("recovery_token=") !== -1) {
+          window.netlifyIdentity.open();
+        }
         if (!user) {
           window.netlifyIdentity.on("login", function() {
             document.location.href = "/admin/";
