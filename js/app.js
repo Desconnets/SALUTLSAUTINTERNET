@@ -197,11 +197,14 @@ function showWelcome() {
   isTyping = true;
   setButtonsEnabled(false);
   typeText(target, welcomeText, () => {
-    // Priorité : welcomeMedia de editorial.json > GIF aléatoire par défaut
-    const welcomeMedia = editorialData?.welcomeMedia
-      ? { type: 'image', url: editorialData.welcomeMedia }
-      : null;
-    appendMedia(mediaContainer, welcomeMedia);
+    // Pour l'écran d'accueil, on utilise la même mécanique
+    // que pour les événements : si aucun média n'est fourni,
+    // on pioche un GIF / une image par défaut dans DEFAULT_MEDIA_URLS.
+    //
+    // Ici on force volontairement l'utilisation du fallback par défaut
+    // (pas de média spécifique passé), ce qui évite aussi les 404
+    // si un ancien chemin de type "assets/img/welcome.gif" traîne encore.
+    appendMedia(mediaContainer, null);
     const infoEl = document.querySelector('.screen-info');
     if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
     isTyping = false;
