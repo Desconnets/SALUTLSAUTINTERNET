@@ -13,7 +13,7 @@
       "time": "20h",
       "address": "Café Tropisme — Montpellier",
       "content": "Nouvelle édition de Hips don't lie : boom géante version 2008, bangers 2000s, paillettes, chorés de clips et cris sur les refrains que tu connais par cœur. Feel like a 2000s kid again !",
-      "media": { "type": "image", "url": "assets/img/hips-dont-lie.gif" }
+      "media": "assets/img/hips-dont-lie.gif"
     },
     {
       "categoryId": "flashback",
@@ -22,7 +22,7 @@
       "time": "—",
       "address": "Café Tropisme · Montpellier",
       "content": "Retour sur la première Hips don't lie : grosse vague de tubes 2000s, sueur, autotune et souvenirs flous de fin de soirée.",
-      "media": { "type": "image", "url": "assets/img/hips-dont-lie.gif" }
+      "media": "assets/img/hips-dont-lie.gif"
     },
     {
       "categoryId": "flashback",
@@ -39,7 +39,7 @@
       "time": "—",
       "address": "Corum de Montpellier · Montpellier",
       "content": "Soirée en plein air sur le toit du Corum : enchaînement de summer hits 2000s, grosse dose de fun, happenings absurdes et ambiance de boom de fin d'été.",
-      "media": { "type": "image", "url": "assets/img/panorama-summer-hits.jpg" }
+      "media": "assets/img/panorama-summer-hits.jpg"
     },
     {
       "categoryId": "flashback",
@@ -64,7 +64,7 @@
       "time": "—",
       "address": "Bar & Microbrasserie La Barbote · Montpellier",
       "content": "Session « console de salon dans un bar » : une arène jeu vidéo déjantée, joueurs tirés du public, défis préparés aux petits oignons et 1h30 de pixels qui titubent entre deux gorgées.",
-      "media": { "type": "image", "url": "assets/img/salut-jeux.jpg" }
+      "media": "assets/img/salut-jeux.jpg"
     },
     { "categoryId": "qui-on-est", "title": "Notre ADN", "content": "Enfants des années 90/2000. Couleurs RVB, sonorités électroniques, saveurs édulcorées. On promeut la culture libre et défend un regard sur les jeux vidéo, le cinéma, la musique et la tech." },
     { "categoryId": "qui-on-est", "title": "Montpellier", "content": "Né à Montpellier, on puise notre inspiration dans le terreau culturel local. Des geeks amoureux de bières et de popculture !" },
