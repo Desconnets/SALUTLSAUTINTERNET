@@ -36,7 +36,9 @@ html, body {
   /* Hauteur calée sur la taille de la fenêtre : pas de scroll de page,
      uniquement du scroll interne dans la zone d'infos de l'écran. */
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  /* NOTE: overflow: hidden retiré intentionnellement — il empêchait
+     les modales overlay (Netlify Identity) de s'afficher. */
   font-family: 'Inter', 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   /* Fond global : utiliser --page-bg pour changer partout en une fois */
   background: var(--page-bg);
