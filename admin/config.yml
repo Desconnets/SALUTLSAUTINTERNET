@@ -1,0 +1,51 @@
+# Decap CMS — Salut Salut Internet
+# Pour édition locale : lancez `npx decap-server` puis ouvrez http://localhost:8080/admin/
+
+backend:
+  name: github
+  repo: Desconnets/SALUTLSAUTINTERNET
+  branch: main
+
+media_folder: "assets/img"
+public_folder: "assets/img"
+
+# Option : décommentez pour tester en local sans GitHub
+# local_backend: true
+
+collections:
+  - name: "editorial"
+    label: "Contenu du site"
+    files:
+      - name: "content"
+        label: "Événements & textes"
+        file: "content/editorial.json"
+        fields:
+          - name: welcomeMedia
+            label: "Image/GIF d'accueil"
+            widget: string
+            hint: "Ex: assets/img/welcome.gif"
+          - name: categories
+            label: "Catégories (Prog, Flashback, Qui on est)"
+            widget: list
+            fields:
+              - { name: id, label: "ID", widget: string }
+              - { name: label, label: "Label", widget: string }
+              - { name: symbol, label: "Symbole", widget: string }
+              - { name: heading, label: "Titre de chapitre", widget: string }
+          - name: items
+            label: "Événements et textes"
+            widget: list
+            fields:
+              - { name: categoryId, label: "Catégorie", widget: select, options: ["prog", "flashback", "qui-on-est"] }
+              - { name: title, label: "Titre", widget: string }
+              - { name: date, label: "Date", widget: string, required: false }
+              - { name: time, label: "Heure", widget: string, required: false }
+              - { name: address, label: "Adresse", widget: string, required: false }
+              - { name: content, label: "Description", widget: text }
+              - label: "Image (optionnel)"
+                name: media
+                widget: object
+                required: false
+                fields:
+                  - { name: type, label: "Type", widget: select, options: ["image"] }
+                  - { name: url, label: "Chemin (ex: assets/img/photo.jpg)", widget: string }

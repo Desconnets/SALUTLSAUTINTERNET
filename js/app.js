@@ -136,8 +136,27 @@ function typeText(element, text, onComplete) {
   step();
 }
 
+let editorialData = null; // Contenu chargé depuis content/editorial.json (Decap CMS)
+
 function loadData() {
-  newsData = typeof NEWS_DATA !== 'undefined' ? NEWS_DATA : newsData;
+  // Priorité : editorial.json (édité via /admin) > data.js
+  fetch('content/editorial.json')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      editorialData = data;
+      newsData = {
+        categories: data.categories || [],
+        items: data.items || []
+      };
+      initApp();
+    })
+    .catch(() => {
+      newsData = typeof NEWS_DATA !== 'undefined' ? { categories: NEWS_DATA.categories, items: NEWS_DATA.items } : newsData;
+      initApp();
+    });
+}
+
+function initApp() {
   renderButtons();
   showWelcome();
 }
@@ -178,9 +197,11 @@ function showWelcome() {
   isTyping = true;
   setButtonsEnabled(false);
   typeText(target, welcomeText, () => {
-    // Utilise toujours un GIF aléatoire parmi les défauts,
-    // comme pour les événements (aucun cas spécial).
-    appendMedia(mediaContainer, null);
+    // Priorité : welcomeMedia de editorial.json > GIF aléatoire par défaut
+    const welcomeMedia = editorialData?.welcomeMedia
+      ? { type: 'image', url: editorialData.welcomeMedia }
+      : null;
+    appendMedia(mediaContainer, welcomeMedia);
     const infoEl = document.querySelector('.screen-info');
     if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
     isTyping = false;
