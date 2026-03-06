@@ -20,19 +20,18 @@ collections:
         label: "Événements & textes"
         file: "content/editorial.json"
         fields:
-          - name: categories
-            label: "Catégories (Prog, Flashback, Qui on est)"
-            widget: list
-            fields:
-              - { name: id, label: "ID", widget: string }
-              - { name: label, label: "Label", widget: string }
-              - { name: symbol, label: "Symbole", widget: string }
-              - { name: heading, label: "Titre de chapitre", widget: string }
+          # 1) Événements / textes — c’est ce que tu vas éditer le plus souvent.
           - name: items
             label: "Événements et textes"
+            label_singular: "Événement / texte"
             widget: list
+            summary: "{{fields.title}} — {{fields.categoryId}}"
             fields:
-              - { name: categoryId, label: "Catégorie", widget: select, options: ["prog", "flashback", "qui-on-est"] }
+              - name: categoryId
+                label: "Catégorie (ID technique — NE PAS MODIFIER)"
+                widget: select
+                options: ["prog", "flashback", "qui-on-est"]
+                hint: "Doit correspondre à une catégorie existante dans la section « Catégories » (prog, flashback, qui-on-est…)."
               - { name: title, label: "Titre", widget: string }
               - { name: date, label: "Date (texte libre)", widget: string, required: false, hint: "Exemple : Samedi 7 décembre" }
               - { name: time, label: "Heure", widget: string, required: false, hint: "Exemple : 20h" }
@@ -43,3 +42,27 @@ collections:
                 widget: image
                 required: false
                 hint: "Tu peux uploader ou choisir une image/GIF. Si tu laisses vide, un GIF par défaut sera utilisé."
+
+          # 2) Catégories — à ne toucher que pour renommer les boutons et titres de chapitres.
+          - name: categories
+            label: "Catégories (boutons + titres de chapitres)"
+            widget: list
+            summary: "{{fields.label}} — {{fields.heading}}"
+            label_singular: "Catégorie"
+            fields:
+              - name: id
+                label: "ID technique (NE PAS MODIFIER)"
+                widget: string
+                hint: "Identifiant interne utilisé par le code (ex: prog, flashback, qui-on-est). NE PAS changer sinon les boutons et les événements casseront."
+              - name: label
+                label: "Texte du bouton"
+                widget: string
+                hint: "Texte affiché sur le bouton dans l’interface (ex: Prog, Flashback…)."
+              - name: symbol
+                label: "Symbole du bouton"
+                widget: string
+                hint: "Petit symbole à côté du texte (ex: ▸, ◂, ◆)."
+              - name: heading
+                label: "Titre de chapitre"
+                widget: string
+                hint: "Titre affiché en haut du bloc de contenu (ex: Nos prochaines soirée dinguooo)."
