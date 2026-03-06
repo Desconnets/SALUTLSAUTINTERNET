@@ -30,10 +30,32 @@
           console.log('[SSI:admin] Pas de user à l’init, écran de login Decap attendu.');
         }
 
-        // Quand on se déconnecte, on recharge /admin
+        // Après un login via la modale Identity, on recharge /admin UNE SEULE FOIS
+        // pour que Decap affiche l’interface CMS (sans boucle infinie).
+        window.netlifyIdentity.on("login", function() {
+          console.log('[SSI:admin] Event login reçu.');
+          try {
+            if (sessionStorage.getItem('ssi_admin_reloaded_after_login') === '1') {
+              console.log('[SSI:admin] Reload déjà fait après login, on ne refait rien.');
+              return;
+            }
+            console.log('[SSI:admin] Premier login → on marque le reload et on recharge /admin/');
+            sessionStorage.setItem('ssi_admin_reloaded_after_login', '1');
+          } catch (e) {
+            console.warn('[SSI:admin] sessionStorage non disponible ou erreur :', e);
+          }
+          document.location.href = '/admin/';
+        });
+
+        // Quand on se déconnecte, on recharge /admin et on réinitialise le flag,
         // pour revenir proprement sur l'écran de login.
         window.netlifyIdentity.on("logout", function() {
-          console.log('[SSI:admin] Événement logout reçu → reload /admin/');
+          console.log('[SSI:admin] Événement logout reçu → reset flag + reload /admin/');
+          try {
+            sessionStorage.removeItem('ssi_admin_reloaded_after_login');
+          } catch (e) {
+            console.warn('[SSI:admin] Erreur en nettoyant le flag de sessionStorage :', e);
+          }
           document.location.href = "/admin/";
         });
       });
