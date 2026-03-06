@@ -30,14 +30,7 @@
           console.log('[SSI:admin] Pas de user à l’init, écran de login Decap attendu.');
         }
 
-        // Quand on se connecte (via la modale Identity), on recharge /admin
-        // pour que Decap affiche directement l'interface CMS.
-        window.netlifyIdentity.on("login", function() {
-          console.log('[SSI:admin] Événement login reçu → reload /admin/');
-          document.location.href = "/admin/";
-        });
-
-        // Quand on se déconnecte, on recharge aussi /admin
+        // Quand on se déconnecte, on recharge /admin
         // pour revenir proprement sur l'écran de login.
         window.netlifyIdentity.on("logout", function() {
           console.log('[SSI:admin] Événement logout reçu → reload /admin/');
