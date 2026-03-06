@@ -13,6 +13,15 @@
   <script>
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", function(user) {
+        var hash = window.location.hash || "";
+
+        // Si on arrive ici via un lien d'invitation ou de reset mot de passe,
+        // on ouvre la modale Identity pour terminer le flux (choix / reset du MDP).
+        if (hash.indexOf("invite_token=") !== -1 || hash.indexOf("recovery_token=") !== -1) {
+          window.netlifyIdentity.open();
+        }
+
+        // Une fois loggé depuis la modale, on reste bien sur /admin/
         if (!user) {
           window.netlifyIdentity.on("login", function() {
             document.location.href = "/admin/";
