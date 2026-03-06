@@ -24,16 +24,20 @@
           window.netlifyIdentity.open();
         }
 
-        // Une fois loggé depuis la modale, on reste bien sur /admin/
-        if (!user) {
-          console.log('[SSI:admin] Pas de user à l’init, on écoute login…');
-          window.netlifyIdentity.on("login", function() {
-            console.log('[SSI:admin] Événement login reçu → redirect /admin/');
-            document.location.href = "/admin/";
-          });
-        } else {
+        // On laisse Decap gérer la navigation après login,
+        // pour éviter les rechargements forcés qui cassent l'interface.
+        if (user) {
           console.log('[SSI:admin] User déjà présent à l’init (session active).');
+        } else {
+          console.log('[SSI:admin] Pas de user à l’init, écran de login Decap attendu.');
         }
+
+        // Par contre, quand on se déconnecte, on force un reload de /admin
+        // pour revenir proprement sur l'écran de login.
+        window.netlifyIdentity.on("logout", function() {
+          console.log('[SSI:admin] Événement logout reçu → reload /admin/');
+          document.location.href = "/admin/";
+        });
       });
     } else {
       console.warn('[SSI:admin] window.netlifyIdentity est undefined (script non chargé ?)');
