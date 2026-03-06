@@ -52,25 +52,34 @@
   <script src="js/app.js"></script>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
+    console.log('[SSI:index] Script Identity chargé, window.netlifyIdentity =', typeof window.netlifyIdentity);
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", function(user) {
         var hash = window.location.hash || "";
+        console.log('[SSI:index] init() → user =', user, 'hash =', hash);
 
         if (hash.indexOf("invite_token=") !== -1 || hash.indexOf("recovery_token=") !== -1) {
+          console.log('[SSI:index] Token détecté dans le hash, appel de netlifyIdentity.open()');
           window.netlifyIdentity.open();
         }
 
         // Si déjà connecté à l'init (ex. après clic sur lien d'invitation), redirect direct
         if (user) {
+          console.log('[SSI:index] user présent à l’init → redirect /admin/');
           document.location.href = "/admin/";
         } else {
+          console.log('[SSI:index] Pas de user à l’init, on attend un login…');
           window.netlifyIdentity.on("login", function() {
+            console.log('[SSI:index] Événement login reçu → redirect /admin/');
             document.location.href = "/admin/";
           });
         }
       });
 
+      console.log('[SSI:index] Appel de netlifyIdentity.init()');
       window.netlifyIdentity.init();
+    } else {
+      console.warn('[SSI:index] window.netlifyIdentity est undefined (script non chargé ?)');
     }
   </script>
 </body>
