@@ -24,15 +24,20 @@
           window.netlifyIdentity.open();
         }
 
-        // On laisse Decap gérer la navigation après login,
-        // pour éviter les rechargements forcés qui cassent l'interface.
         if (user) {
           console.log('[SSI:admin] User déjà présent à l’init (session active).');
         } else {
           console.log('[SSI:admin] Pas de user à l’init, écran de login Decap attendu.');
         }
 
-        // Par contre, quand on se déconnecte, on force un reload de /admin
+        // Quand on se connecte (via la modale Identity), on recharge /admin
+        // pour que Decap affiche directement l'interface CMS.
+        window.netlifyIdentity.on("login", function() {
+          console.log('[SSI:admin] Événement login reçu → reload /admin/');
+          document.location.href = "/admin/";
+        });
+
+        // Quand on se déconnecte, on recharge aussi /admin
         // pour revenir proprement sur l'écran de login.
         window.netlifyIdentity.on("logout", function() {
           console.log('[SSI:admin] Événement logout reçu → reload /admin/');
