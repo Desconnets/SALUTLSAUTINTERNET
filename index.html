@@ -59,8 +59,9 @@
         console.log('[SSI:index] init() → user =', user, 'hash =', hash);
 
         if (hash.indexOf("invite_token=") !== -1 || hash.indexOf("recovery_token=") !== -1) {
-          console.log('[SSI:index] Token détecté dans le hash, appel de netlifyIdentity.open()');
-          window.netlifyIdentity.open();
+          console.log('[SSI:index] Token détecté dans le hash → redirect vers /admin/ avec le même hash');
+          document.location.href = "/admin/" + hash;
+          return;
         }
 
         // Si déjà connecté à l'init (ex. après clic sur lien d'invitation), redirect direct
