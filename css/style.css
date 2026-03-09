@@ -674,6 +674,27 @@ html::before {
   margin: 0;
 }
 
+/* Pour que le curseur GIF reste sur la même ligne
+   que le texte des événements (et ne saute pas tout seul dessous). */
+.news-item-meta {
+  display: inline-block;
+}
+
+/* Petit curseur qui suit le texte pendant l’animation typewriter */
+.typing-cursor {
+  display: inline-block;
+  width: 3.6em;
+  height: 3.6em;
+  margin-left: 0.3em;
+  vertical-align: middle;
+  /* Le CSS est dans css/, donc on remonte d'un dossier pour aller dans assets/ */
+  background-image: url("../assets/img/typing-cursor.gif");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-color: transparent;
+}
+
 /* Zone interactive (boutons) */
 .screen-controls {
   width: 25%;

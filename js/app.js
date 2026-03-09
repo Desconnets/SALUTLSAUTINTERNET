@@ -12,7 +12,7 @@
 let newsData = { categories: [], items: [] };
 let contentHistory = [];
 let isTyping = false;
-const TYPE_SPEED = 25;
+const TYPE_SPEED = 20;
 // Délai approximatif de l’animation des médias (CSS media-scan)
 const MEDIA_ANIM_DELAY_MS = 1400;
 
@@ -133,17 +133,40 @@ function blockToHtml(block) {
 
 function typeText(element, text, onComplete) {
   let i = 0;
+
+  // On encapsule le texte dans un span dédié pour pouvoir garder le curseur
+  // toujours à la fin, SANS qu'il saute à la ligne.
+  const textSpan = document.createElement('span');
+  textSpan.className = 'typing-text';
+  const cursor = document.createElement('span');
+  cursor.className = 'typing-cursor';
+
+  // On vide l'élément cible et on remet notre duo (texte + curseur) dedans.
+  element.textContent = '';
+  element.appendChild(textSpan);
+  element.appendChild(cursor);
+
+  function cleanupCursor() {
+    if (cursor && cursor.parentNode) {
+      cursor.parentNode.removeChild(cursor);
+    }
+  }
+
   function step() {
     if (i < text.length) {
-      element.textContent += text[i];
+      textSpan.textContent += text[i];
       i++;
       const info = document.querySelector('.screen-info');
       if (info) info.scrollTop = info.scrollHeight;
       setTimeout(step, TYPE_SPEED);
-    } else if (onComplete) {
-      setTimeout(onComplete, 50);
+    } else {
+      cleanupCursor();
+      if (onComplete) {
+        setTimeout(onComplete, 50);
+      }
     }
   }
+
   step();
 }
 
@@ -387,8 +410,8 @@ const STICKER_BOUNCE = 0.6;
 const STICKER_REST_THRESHOLD = 0.5;
 const STICKER_FLY_UP_SPEED = -14;
 const STICKER_FIRST_DELAY_MS = 2500;
-const STICKER_SPAWN_INTERVAL_MS = 30000;
-const STICKER_MAX_ON_SCREEN = 4;
+const STICKER_SPAWN_INTERVAL_MS = 60000;
+const STICKER_MAX_ON_SCREEN = 7;
 
 let fallingStickerCount = 0;
 
