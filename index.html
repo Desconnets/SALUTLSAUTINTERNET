@@ -102,7 +102,7 @@
     </div>
   </div>
   <footer class="site-footer">
-    <span class="contact-hint">Nous contacter</span>
+    <span class="contact-hint"> >>Nous contacter<< </span>
   </footer>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
@@ -173,6 +173,53 @@
         if (!popup.classList.contains('event-popup--hidden')) return;
         popup.classList.remove('event-popup--hidden');
       }, POPUP_DELAY_MS);
+    })();
+  </script>
+  <script>
+    // Copier le mail de contact au clic sur "Nous contacter"
+    (function () {
+      const EMAIL = 'contact@salutsalutinternet.com';
+      const hint = document.querySelector('.contact-hint');
+      if (!hint) return;
+
+      const originalText = hint.textContent;
+      let resetTimeout = null;
+
+      function setTextOnce(message) {
+        hint.textContent = message;
+        if (resetTimeout) clearTimeout(resetTimeout);
+        resetTimeout = setTimeout(function () {
+          hint.textContent = originalText;
+        }, 3000);
+      }
+
+      function copyEmail() {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(EMAIL).then(function () {
+            setTextOnce('Copié ! Il ne reste plus qu’à coller');
+          }).catch(function () {
+            setTextOnce('Copié ! Il ne reste plus qu’à coller');
+          });
+        } else {
+          // Fallback legacy
+          const textarea = document.createElement('textarea');
+          textarea.value = EMAIL;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          try {
+            document.execCommand('copy');
+          } catch (e) {
+            // silencieux
+          }
+          document.body.removeChild(textarea);
+          setTextOnce('Copié ! Il ne reste plus qu’à coller');
+        }
+      }
+
+      hint.addEventListener('click', copyEmail);
     })();
   </script>
   <script>
