@@ -9,8 +9,9 @@ const WELCOME_MEDIA = 'assets/img/welcome.gif';
 // Ajouter ici les chemins vers tes PNG (ex. assets/img/stickers/emoji.png).
 // À chaque chute, un sticker est choisi aléatoirement dans cette liste. Ajoute d’autres chemins si tu veux.
 const FALLING_STICKER_URLS = [
-  'assets/img/stickers/sticker.png',
-  'assets/img/stickers/sticker2.png',
+  //'assets/img/stickers/sticker.png',
+  //'assets/img/stickers/sticker2.png',
+  'assets/img/stickers/sticker3.jpg',
   // 'assets/img/stickers/sticker2.png',
   // 'assets/img/stickers/sticker3.png',
 ];
@@ -23,7 +24,7 @@ const NEWS_DATA = {
       symbol: "▸",
       subtitle: "",
       // Titre de chapitre affiché dans la fenêtre d'info
-      heading: "Nos prochaines soirée dinguooo"
+      heading: "Nos prochaines soirées dinguooo"
     },
     {
       id: "flashback",
@@ -44,12 +45,12 @@ const NEWS_DATA = {
     // Prog (à venir)
     {
       categoryId: "prog",
-      title: "Hips don't lie 2",
-      date: "Jeudi 3 avril",
-      time: "20h",
+      title: "Soirée années 2000 — Café Tropisme",
+      date: "Ven, 3 avril 2026",
+      time: "19h30",
       address: "Café Tropisme — Montpellier",
-      content: "Nouvelle édition de Hips don't lie : boom géante version 2008, bangers 2000s, paillettes, chorés de clips et cris sur les refrains que tu connais par cœur. Feel like a 2000s kid again !",
-      media: { type: 'image', url: 'assets/img/hips-dont-lie.gif' }
+      content: "💿✨ Soirée années 2000 par Salut Salut Internet ✨💿\n\n👽 Prépare ton pseudo MSN, recharge ton Nokia 3310 et replonge dans l’Internet des années 2000. L’association Salut Salut Internet débarque au Café Tropisme pour une soirée RGB : DJ set, animations, projections vidéo, gifs qui tournent en boucle et… des dauphins évidemment. 🐬\n\nUne nuit entre Just Dance, Windows XP, pixels fluo et tubes du début du millénaire. 💜 Viens danser dans un Internet où tout brillait, clignotait et faisait *bling*.",
+      media: { type: 'image', url: 'assets/img/affiche_event_tropisme.jpg' }
     },
 
     // Flashback (passé) — du plus récent au plus ancien

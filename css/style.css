@@ -277,6 +277,98 @@ html.theme-dark body {
   margin-top: -0.15em;
 }
 
+/* --- Popup événement (affiche prochaine soirée) --- */
+.event-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-popup--hidden {
+  display: none;
+}
+
+.event-popup-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.event-popup-window {
+  position: relative;
+  max-width: min(90vw, 520px);
+  border: 2px solid var(--accent);
+  background: var(--frame-bg);
+  padding: 0.4rem;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.85);
+  z-index: 1;
+  opacity: 0;
+  transform: scale(0.86);
+}
+
+.event-popup-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.event-popup-close {
+  position: absolute;
+  top: 0.15rem;
+  right: 0.25rem;
+  border-radius: 2px;
+  border: 1px solid var(--accent);
+  background: var(--page-bg);
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0 0.25rem;
+  cursor: pointer;
+}
+
+.event-popup-close:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (max-width: 600px) {
+  .event-popup-window {
+    max-width: 92vw;
+    padding: 0.3rem;
+  }
+
+  .event-popup-close {
+    font-size: 0.6rem;
+    top: 0.1rem;
+    right: 0.2rem;
+  }
+}
+
+/* Animation d'apparition : zoom + fade façon fenêtre pop-up */
+.event-popup:not(.event-popup--hidden) .event-popup-window {
+  animation: event-popup-zoom-in 260ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes event-popup-zoom-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Ancien conteneur WebGL laissé neutre au cas où */
 #logo-3d-root {
   display: none;
@@ -740,6 +832,7 @@ html::before {
 .news-item-content {
   display: inline;
   margin: 0;
+  white-space: pre-line;
 }
 
 /* Pour que le curseur GIF reste sur la même ligne

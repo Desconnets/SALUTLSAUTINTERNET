@@ -8,6 +8,15 @@
   "items": [
     {
       "categoryId": "prog",
+      "title": "Soirée années 2000 — Café Tropisme",
+      "date": "Ven, 3 avril 2026",
+      "time": "19h30",
+      "address": "Café Tropisme — Montpellier",
+      "content": "💿✨ Soirée années 2000 par Salut Salut Internet ✨💿\\n👽 Prépare ton pseudo MSN, recharge ton Nokia 3310 et replonge dans l’Internet des années 2000. L’association Salut Salut Internet débarque au Café Tropisme pour une soirée RGB : DJ set, animations, projections vidéo, gifs qui tournent en boucle et… des dauphins évidemment. 🐬\\nUne nuit entre Just Dance, Windows XP, pixels fluo et tubes du début du millénaire. 💜 Viens danser dans un Internet où tout brillait, clignotait et faisait *bling*.",
+      "media": "assets/img/affiche_event_tropisme.jpg"
+    },
+    {
+      "categoryId": "prog",
       "title": "Hips don't lie 2",
       "date": "Jeudi 3 avril",
       "time": "20h",
