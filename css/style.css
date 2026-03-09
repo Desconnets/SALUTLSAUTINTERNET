@@ -277,6 +277,56 @@ html.theme-dark body {
   margin-top: -0.15em;
 }
 
+/* --- Footer très discret avec contact --- */
+.site-footer {
+  width: 100%;
+  padding: 0.25rem 1.5rem 0.5rem;
+  text-align: center;
+  font-size: 0.65rem;
+}
+
+.contact-hint {
+  position: relative;
+  display: inline-block;
+  color: rgba(107, 0, 221, 0.45);
+  font-family: 'IBM Plex Sans', 'IBM Plex Mono', 'Courier New', monospace;
+  cursor: default;
+  opacity: 0.7;
+  transform: translateY(2px);
+  transition: color 140ms ease-out, opacity 140ms ease-out, transform 140ms ease-out;
+}
+
+.contact-hint::after {
+  content: "contact@salutsalutinternet.com";
+  position: absolute;
+  bottom: 130%;
+  right: 0;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid var(--accent);
+  background: var(--frame-bg);
+  color: var(--accent);
+  font-size: 0.65rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+
+.contact-hint:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contact-hint:hover {
+  color: rgba(107, 0, 221, 0.95);
+  opacity: 1;
+  transform: translateY(0);
+  text-decoration: underline;
+}
+
 /* --- Popup événement (affiche prochaine soirée) --- */
 .event-popup {
   position: fixed;
