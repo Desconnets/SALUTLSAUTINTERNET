@@ -309,9 +309,11 @@ function renderHistoryAndType() {
       const titleEl = itemDiv.querySelector('.news-item-title');
       const metaEl = itemDiv.querySelector('.news-item-meta');
       const contentEl = itemDiv.querySelectorAll('.news-item-content')[0];
+      const rawContent = item.content || '';
+      const normalizedContent = rawContent.replace(/\\n/g, '\n');
       typeText(titleEl, getEventTitleLabel(item), () => {
         typeText(metaEl, metaText, () => {
-          typeText(contentEl, item.content || '', () => {
+          typeText(contentEl, normalizedContent, () => {
             // Toujours appeler appendMedia : s'il n'y a pas de media spécifique,
             // un fallback par défaut sera utilisé.
             const hadMedia = appendMedia(itemDiv, item.media);
@@ -329,8 +331,10 @@ function renderHistoryAndType() {
       if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
       const titleEl = itemDiv.querySelector('.news-item-title');
       const contentEl = itemDiv.querySelector('.news-item-content');
+      const rawContent2 = item.content || '';
+      const normalizedContent2 = (' ' + rawContent2).replace(/\\n/g, '\n');
       typeText(titleEl, getEventTitleLabel(item), () => {
-        typeText(contentEl, ' ' + (item.content || ''), () => {
+        typeText(contentEl, normalizedContent2, () => {
           // Idem ici : fallback si aucun media n'est défini.
           const hadMedia = appendMedia(itemDiv, item.media);
           itemIndex++;
