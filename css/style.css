@@ -140,6 +140,63 @@ html.theme-dark body {
   height: auto;
 }
 
+/* Lien Instagram dans le header */
+.social-link--instagram {
+  position: absolute;
+  top: 0.9rem;
+  left: 1.5rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  /* Style SSI : contour violet, fond transparent (s’adapte clair/sombre) */
+  background: transparent;
+  border: 1px solid rgba(107, 0, 221, 0.6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.social-link--instagram:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 1px rgba(107, 0, 221, 0.7);
+}
+
+.social-link--instagram::before {
+  content: "";
+  width: 60%;
+  height: 60%;
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.social-link--instagram::after {
+  content: "";
+  position: absolute;
+  top: 18%;
+  right: 16%;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(107, 0, 221, 0.8);
+}
+
+/* Accessibilité : texte invisible visuellement mais présent pour les lecteurs d'écran */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Petit bouton de bascule de thème dans le header */
 .theme-toggle {
   position: absolute;
