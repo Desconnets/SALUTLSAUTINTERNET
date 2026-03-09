@@ -184,6 +184,17 @@ html.theme-dark body {
   background: rgba(107, 0, 221, 0.8);
 }
 
+/* Version plus petite sur les écrans étroits */
+@media (max-width: 600px) {
+  .social-link--instagram {
+    top: 0.8rem;
+    left: 1rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+  }
+}
+
 /* Accessibilité : texte invisible visuellement mais présent pour les lecteurs d'écran */
 .visually-hidden {
   position: absolute;
