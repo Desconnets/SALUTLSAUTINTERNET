@@ -173,21 +173,13 @@ function typeText(element, text, onComplete) {
 let editorialData = null; // Contenu chargé depuis content/editorial.json (Decap CMS)
 
 function loadData() {
-  // Priorité : editorial.json (édité via /admin) > data.js
-  fetch('content/editorial.json')
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      editorialData = data;
-      newsData = {
-        categories: data.categories || [],
-        items: data.items || []
-      };
-      initApp();
-    })
-    .catch(() => {
-      newsData = typeof NEWS_DATA !== 'undefined' ? { categories: NEWS_DATA.categories, items: NEWS_DATA.items } : newsData;
-      initApp();
-    });
+  // TEMP : on désactive editorial.json et on se base
+  // uniquement sur NEWS_DATA (js/data.js), le temps
+  // que le CMS soit stabilisé.
+  if (typeof NEWS_DATA !== 'undefined') {
+    newsData = { categories: NEWS_DATA.categories, items: NEWS_DATA.items };
+  }
+  initApp();
 }
 
 function initApp() {
