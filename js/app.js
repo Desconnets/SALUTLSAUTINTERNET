@@ -156,7 +156,7 @@ function typeText(element, text, onComplete) {
     if (i < text.length) {
       textSpan.textContent += text[i];
       i++;
-      const info = document.querySelector('.screen-info');
+      const info = document.querySelector('.screen-info-content');
       if (info) info.scrollTop = info.scrollHeight;
       setTimeout(step, TYPE_SPEED);
     } else {
@@ -210,32 +210,49 @@ function appendMedia(container, media) {
   }
   container.appendChild(wrapper);
   // S'assurer que la zone d'infos suit l'apparition du média
-  const infoEl = document.querySelector('.screen-info');
+  const infoEl = document.querySelector('.screen-info-content');
   if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
   return true;
 }
 
 function showWelcome() {
-  const info = document.querySelector('.screen-info');
-  const welcomeText = 'Feel like a 2000s kid again. Clique pour explorer.';
-  info.innerHTML = '<div class="screen-info-block"><p><span class="typewriter-target"></span></p><div class="welcome-media"></div></div>';
-  const target = info.querySelector('.typewriter-target');
-  const mediaContainer = info.querySelector('.welcome-media');
+  const info = document.querySelector('.screen-info-content');
+  info.innerHTML = `
+    <div class="screen-info-block screen-info-block--welcome screen-info-block-typing">
+      <h2><span class="typewriter-target"></span></h2>
+      <div class="news-items" id="typing-container"></div>
+    </div>
+  `;
+  const h2Target = info.querySelector('h2 .typewriter-target');
+  const container = document.getElementById('typing-container');
+  const itemDiv = document.createElement('div');
+  itemDiv.className = 'news-item news-item-event';
+  itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span><span class="news-item-content typewriter-target"></span>';
+  container.appendChild(itemDiv);
+
+  const titleEl = itemDiv.querySelector('.news-item-title');
+  const contentEl = itemDiv.querySelector('.news-item-content');
+
   isTyping = true;
   setButtonsEnabled(false);
-  typeText(target, welcomeText, () => {
-    // Pour l'écran d'accueil, on utilise la même mécanique
-    // que pour les événements : si aucun média n'est fourni,
-    // on pioche un GIF / une image par défaut dans DEFAULT_MEDIA_URLS.
-    //
-    // Ici on force volontairement l'utilisation du fallback par défaut
-    // (pas de média spécifique passé), ce qui évite aussi les 404
-    // si un ancien chemin de type "assets/img/welcome.gif" traîne encore.
-    appendMedia(mediaContainer, null);
-    const infoEl = document.querySelector('.screen-info');
+
+  function onComplete() {
+    document.querySelector('.screen-info-block-typing').classList.remove('screen-info-block-typing');
+    const infoEl = document.querySelector('.screen-info-content');
     if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
     isTyping = false;
     setButtonsEnabled(true);
+  }
+
+  typeText(h2Target, 'Bienvenue bienvenue internet !', () => {
+    typeText(titleEl, 'Feel like a 2000s kid again.', () => {
+      typeText(contentEl, 'Clique pour explorer !', () => {
+        appendMedia(itemDiv, null);
+        const infoEl = document.querySelector('.screen-info-content');
+        if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
+        setTimeout(onComplete, 400);
+      });
+    });
   });
 }
 
@@ -244,13 +261,13 @@ function addToHistory(block) {
 }
 
 function setButtonsEnabled(enabled) {
-  document.querySelectorAll('.screen-controls button').forEach(btn => {
+  document.querySelectorAll('.screen-nav button').forEach(btn => {
     btn.disabled = !enabled;
   });
 }
 
 function renderHistoryAndType() {
-  const info = document.querySelector('.screen-info');
+  const info = document.querySelector('.screen-info-content');
   if (contentHistory.length === 0) {
     showWelcome();
     return;
@@ -259,19 +276,20 @@ function renderHistoryAndType() {
   const fullBlocks = contentHistory.slice(0, -1);
   const lastBlock = contentHistory[contentHistory.length - 1];
 
-  let html = fullBlocks.map(block => `
-    <div class="screen-info-block screen-info-block--${block.category.id}">
-      <h2>${block.label}</h2>
-      <div class="news-items">${blockToHtml(block)}</div>
-    </div>
-  `).join('');
-
-  html += `
-    <div class="screen-info-block screen-info-block--${lastBlock.category.id} screen-info-block-typing">
-      <h2>${lastBlock.label}</h2>
-      <div class="news-items" id="typing-container"></div>
+  const allBlocks = contentHistory;
+  let html = allBlocks.map((block, idx) => {
+    const isLast = idx === allBlocks.length - 1;
+    const typingClass = isLast ? ' screen-info-block-typing' : '';
+    const itemsHtml = isLast
+      ? '<div class="news-items" id="typing-container"></div>'
+      : `<div class="news-items">${blockToHtml(block)}</div>`;
+    return `
+    <div class="screen-info-block screen-info-block--${block.category.id}${typingClass}">
+      <h2><span class="typewriter-target"></span></h2>
+      ${itemsHtml}
     </div>
   `;
+  }).join('');
 
   info.innerHTML = html;
   info.scrollTop = info.scrollHeight;
@@ -279,14 +297,29 @@ function renderHistoryAndType() {
   isTyping = true;
   setButtonsEnabled(false);
 
+  const h2Targets = info.querySelectorAll('.screen-info-block h2 .typewriter-target');
   const container = document.getElementById('typing-container');
   let itemIndex = 0;
+  let h2Index = 0;
+
+  function typeNextH2() {
+    if (h2Index >= allBlocks.length) {
+      typeNextItem();
+      return;
+    }
+    const block = allBlocks[h2Index];
+    const target = h2Targets[h2Index];
+    h2Index++;
+    typeText(target, block.label, () => {
+      typeNextH2();
+    });
+  }
 
   function typeNextItem() {
     if (itemIndex >= lastBlock.items.length) {
       document.querySelector('.screen-info-block-typing').classList.remove('screen-info-block-typing');
        // S'assurer qu'à la fin du dernier événement, on est bien scrolled en bas
-       const infoEnd = document.querySelector('.screen-info');
+       const infoEnd = document.querySelector('.screen-info-content');
        if (infoEnd) infoEnd.scrollTop = infoEnd.scrollHeight;
       isTyping = false;
       setButtonsEnabled(true);
@@ -304,7 +337,7 @@ function renderHistoryAndType() {
       container.appendChild(itemDiv);
       // On "pré-shoot" le scroll dès qu'un nouvel événement est inséré,
       // pour réserver la place du texte + média et garder le bloc visible.
-      const infoOnInsert = document.querySelector('.screen-info');
+      const infoOnInsert = document.querySelector('.screen-info-content');
       if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
       const titleEl = itemDiv.querySelector('.news-item-title');
       const metaEl = itemDiv.querySelector('.news-item-meta');
@@ -327,7 +360,7 @@ function renderHistoryAndType() {
     } else {
       itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span> <span class="news-item-content typewriter-target"></span>';
       container.appendChild(itemDiv);
-      const infoOnInsert = document.querySelector('.screen-info');
+      const infoOnInsert = document.querySelector('.screen-info-content');
       if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
       const titleEl = itemDiv.querySelector('.news-item-title');
       const contentEl = itemDiv.querySelector('.news-item-content');
@@ -344,13 +377,17 @@ function renderHistoryAndType() {
     }
   }
 
-  typeNextItem();
+  typeNextH2();
 }
 
 function renderButtons() {
-  const container = document.querySelector('.screen-controls');
+  const container = document.querySelector('.screen-nav');
   container.innerHTML = newsData.categories
-    .map(cat => `<button data-id="${cat.id}">${cat.label} ${cat.symbol}</button>`)
+    .map(cat => {
+      const tooltip = cat.tooltip || '';
+      const tooltipAttr = tooltip ? ` title="${tooltip.replace(/"/g, '&quot;')}"` : '';
+      return `<button data-id="${cat.id}"${tooltipAttr}>${cat.label} ${cat.symbol}</button>`;
+    })
     .join('');
 
   container.querySelectorAll('button').forEach(btn => {

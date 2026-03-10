@@ -24,21 +24,24 @@ const NEWS_DATA = {
       symbol: "▸",
       subtitle: "",
       // Titre de chapitre affiché dans la fenêtre d'info
-      heading: "Nos prochaines soirées dinguooo"
+      heading: "Nos prochaines soirées dinguooo",
+      tooltip: "Nos prochains event !"
     },
     {
       id: "flashback",
       label: "Flashback",
       symbol: "◂",
       subtitle: "",
-      heading: "Nos soirées passées (souvenirs de kids MSN)"
+      heading: "Nos soirées passées (souvenirs de kids MSN)",
+      tooltip: "Nos souvenirs de soirée pour les kids !"
     },
     {
       id: "qui-on-est",
       label: "Qui on est",
       symbol: "◆",
       subtitle: "",
-      heading: "Le crew Salut Salut Internet"
+      heading: "Le crew Salut Salut Internet",
+      tooltip: "Découvrir la team !"
     }
   ],
   items: [
