@@ -15,6 +15,11 @@ let isTyping = false;
 const TYPE_SPEED = 20;
 // Délai approximatif de l’animation des médias (CSS media-scan)
 const MEDIA_ANIM_DELAY_MS = 1400;
+// Si l’internaute remonte dans la zone d’infos, on arrête de forcer le scroll en bas
+// jusqu’à ce qu’il revienne près du bas (voir initInfoPanelScrollUnlock + scrollInfoPanelToBottom).
+const INFO_SCROLL_BOTTOM_THRESHOLD_PX = 72;
+let infoPanelAllowAutoScroll = true;
+let infoScrollListenerBound = false;
 
 // Médias par défaut à utiliser quand un événement (ou l'écran d'accueil)
 // n'a pas encore d'image / gif associé.
@@ -131,6 +136,40 @@ function blockToHtml(block) {
   return block.items.map(item => formatEventItem(item)).join('');
 }
 
+function getInfoContentEl() {
+  return document.querySelector('.screen-info-content');
+}
+
+function isInfoPanelAtBottom(el) {
+  if (!el) return true;
+  const gap = el.scrollHeight - el.scrollTop - el.clientHeight;
+  return gap <= INFO_SCROLL_BOTTOM_THRESHOLD_PX;
+}
+
+/** Scroll en bas du panneau d’infos si autorisé, ou toujours si options.force (nouveau contenu). */
+function scrollInfoPanelToBottom(options = {}) {
+  const force = options.force === true;
+  const el = getInfoContentEl();
+  if (!el) return;
+  if (!force && !infoPanelAllowAutoScroll) return;
+  el.scrollTop = el.scrollHeight;
+  if (force) infoPanelAllowAutoScroll = true;
+}
+
+function initInfoPanelScrollUnlock() {
+  if (infoScrollListenerBound) return;
+  const el = getInfoContentEl();
+  if (!el) return;
+  infoScrollListenerBound = true;
+  el.addEventListener(
+    'scroll',
+    () => {
+      infoPanelAllowAutoScroll = isInfoPanelAtBottom(el);
+    },
+    { passive: true }
+  );
+}
+
 function typeText(element, text, onComplete) {
   let i = 0;
 
@@ -156,8 +195,7 @@ function typeText(element, text, onComplete) {
     if (i < text.length) {
       textSpan.textContent += text[i];
       i++;
-      const info = document.querySelector('.screen-info-content');
-      if (info) info.scrollTop = info.scrollHeight;
+      scrollInfoPanelToBottom();
       setTimeout(step, TYPE_SPEED);
     } else {
       cleanupCursor();
@@ -183,6 +221,7 @@ function loadData() {
 }
 
 function initApp() {
+  initInfoPanelScrollUnlock();
   renderButtons();
   showWelcome();
 }
@@ -209,9 +248,7 @@ function appendMedia(container, media) {
     wrapper.appendChild(img);
   }
   container.appendChild(wrapper);
-  // S'assurer que la zone d'infos suit l'apparition du média
-  const infoEl = document.querySelector('.screen-info-content');
-  if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
+  scrollInfoPanelToBottom();
   return true;
 }
 
@@ -229,6 +266,7 @@ function showWelcome() {
   itemDiv.className = 'news-item news-item-event';
   itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span><span class="news-item-content typewriter-target"></span>';
   container.appendChild(itemDiv);
+  scrollInfoPanelToBottom({ force: true });
 
   const titleEl = itemDiv.querySelector('.news-item-title');
   const contentEl = itemDiv.querySelector('.news-item-content');
@@ -238,8 +276,7 @@ function showWelcome() {
 
   function onComplete() {
     document.querySelector('.screen-info-block-typing').classList.remove('screen-info-block-typing');
-    const infoEl = document.querySelector('.screen-info-content');
-    if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
+    scrollInfoPanelToBottom();
     isTyping = false;
     setButtonsEnabled(true);
   }
@@ -248,8 +285,7 @@ function showWelcome() {
     typeText(titleEl, 'Feel like a 2000s kid again.', () => {
       typeText(contentEl, 'Clique pour explorer !', () => {
         appendMedia(itemDiv, null);
-        const infoEl = document.querySelector('.screen-info-content');
-        if (infoEl) infoEl.scrollTop = infoEl.scrollHeight;
+        scrollInfoPanelToBottom();
         setTimeout(onComplete, 400);
       });
     });
@@ -292,7 +328,7 @@ function renderHistoryAndType() {
   }).join('');
 
   info.innerHTML = html;
-  info.scrollTop = info.scrollHeight;
+  scrollInfoPanelToBottom({ force: true });
 
   isTyping = true;
   setButtonsEnabled(false);
@@ -318,9 +354,7 @@ function renderHistoryAndType() {
   function typeNextItem() {
     if (itemIndex >= lastBlock.items.length) {
       document.querySelector('.screen-info-block-typing').classList.remove('screen-info-block-typing');
-       // S'assurer qu'à la fin du dernier événement, on est bien scrolled en bas
-       const infoEnd = document.querySelector('.screen-info-content');
-       if (infoEnd) infoEnd.scrollTop = infoEnd.scrollHeight;
+       scrollInfoPanelToBottom();
       isTyping = false;
       setButtonsEnabled(true);
       return;
@@ -335,10 +369,7 @@ function renderHistoryAndType() {
       const metaText = buildMetaParts(item).join(' • ');
       itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span><div class="news-item-meta typewriter-target"></div><span class="news-item-content typewriter-target"></span>';
       container.appendChild(itemDiv);
-      // On "pré-shoot" le scroll dès qu'un nouvel événement est inséré,
-      // pour réserver la place du texte + média et garder le bloc visible.
-      const infoOnInsert = document.querySelector('.screen-info-content');
-      if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
+      scrollInfoPanelToBottom();
       const titleEl = itemDiv.querySelector('.news-item-title');
       const metaEl = itemDiv.querySelector('.news-item-meta');
       const contentEl = itemDiv.querySelectorAll('.news-item-content')[0];
@@ -360,8 +391,7 @@ function renderHistoryAndType() {
     } else {
       itemDiv.innerHTML = '<span class="news-item-title typewriter-target"></span> <span class="news-item-content typewriter-target"></span>';
       container.appendChild(itemDiv);
-      const infoOnInsert = document.querySelector('.screen-info-content');
-      if (infoOnInsert) infoOnInsert.scrollTop = infoOnInsert.scrollHeight;
+      scrollInfoPanelToBottom();
       const titleEl = itemDiv.querySelector('.news-item-title');
       const contentEl = itemDiv.querySelector('.news-item-content');
       const rawContent2 = item.content || '';
