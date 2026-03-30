@@ -40,7 +40,7 @@ const NEWS_DATA = {
       label: "Qui on est",
       symbol: "◆",
       subtitle: "",
-      heading: "Le crew Salut Salut Internet",
+      heading: "Salut Salut Internet — l’asso du web 2000",
       tooltip: "Découvrir la team !"
     }
   ],
@@ -109,9 +109,26 @@ const NEWS_DATA = {
       media: { type: 'image', url: 'assets/img/salut-jeux.jpg' }
     },
 
-    // Qui on est
-    { categoryId: "qui-on-est", title: "Notre ADN", content: "Enfants des années 90/2000. Couleurs RVB, sonorités électroniques, saveurs édulcorées. On promeut la culture libre et défend un regard sur les jeux vidéo, le cinéma, la musique et la tech." },
-    { categoryId: "qui-on-est", title: "Montpellier", content: "Né à Montpellier, on puise notre inspiration dans le terreau culturel local. Des geeks amoureux de bières et de popculture !" },
-    { categoryId: "qui-on-est", title: "Notre mission", content: "Promouvoir la popculture et animer les pixels. Événements, podcasts, et plein de surprises années 2000." }
+    // Qui on est (ordre = fil narratif : qui / quoi / comment / esprit)
+    {
+      categoryId: "qui-on-est",
+      title: "Montpellier & culture web 2000",
+      content: "Salut Salut Internet est une association basée à Montpellier qui célèbre la culture web des années 2000. L’époque des forums, des Skyblogs, des pseudos stylés sur MSN, des gifs qui brillent et des nuits passées à jouer en ligne."
+    },
+    {
+      categoryId: "qui-on-est",
+      title: "Ce qu’on aime",
+      content: "On aime la pop culture, les jeux vidéo, les mèmes d’Internet d’avant, et tout ce qui faisait le charme du web un peu chaotique, créatif et libre des débuts."
+    },
+    {
+      categoryId: "qui-on-est",
+      title: "Événements & soirées",
+      content: "L’association organise des événements et des soirées fun pour partager cette nostalgie : rencontres, fêtes thématiques, jeux, musique et vibes rétro-internet."
+    },
+    {
+      categoryId: "qui-on-est",
+      title: "Terrain de jeu",
+      content: "Un espace pour se retrouver, rigoler et faire revivre l’esprit du web 2000 — quand Internet était un terrain de jeu. 💻✨"
+    }
   ]
 };
