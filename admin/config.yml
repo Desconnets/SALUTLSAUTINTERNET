@@ -26,6 +26,7 @@ collections:
             label_singular: "Événement / texte"
             widget: list
             summary: "{{fields.title}} — {{fields.categoryId}}"
+            hint: "Prog / Flashback : remplis date, heure, adresse si besoin + description + image. Pour « Qui on est », choisis la catégorie qui-on-est, remplis Titre + Description uniquement (laisse date/heure/adresse vides) — tu peux avoir plusieurs entrées pour un même chapitre."
             fields:
               - name: categoryId
                 label: "Catégorie (ID technique — NE PAS MODIFIER)"
@@ -65,4 +66,4 @@ collections:
               - name: heading
                 label: "Titre de chapitre"
                 widget: string
-                hint: "Titre affiché en haut du bloc de contenu (ex: Nos prochaines soirée dinguooo)."
+                hint: "Titre affiché en haut du bloc de contenu (ex: Nos prochaines soirées…). Pour Qui on est, ex. : Salut Salut Internet — l’asso du web 2000."
